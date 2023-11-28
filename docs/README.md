@@ -6,6 +6,7 @@
     - [Tech stack](#tech-stack)
 - [Development](#development)
     - [Database](#database)
+    - [Backend](#backend)
 - [Testing](#testing)
 - [Deployment](#deployment)
 
@@ -27,7 +28,7 @@ I got the idea for this project by searching for datasets. I wanted a large data
 
 I started by creating an account on Azure with my student email, after which I created a PostgreSQL server with a database in it called "movie_wizard". I then created the general framework for the project with Django and connected it to the database.
 
-I then created a model for the titles, which can be found [here](../movie_wizard/titles/models.py):
+After that, I created a model for the titles, which can be found [here](../movie_wizard/titles/models.py). Shown below in table form:
 
 | Field Name | Data Type | Max Length | Null |
 |------------|-----------|------------|------|
@@ -39,11 +40,30 @@ I then created a model for the titles, which can be found [here](../movie_wizard
 | runtime_minutes | IntegerField | N/A | Yes |
 | genres | CharField | 255 | Yes |
 
-I had to do some cleaning of the data before inserting it into the table, which I did in this [Jupyter Notebook](../data.ipynb). After this, I created [this script](../scripts/populate_db.py) to populate the database with the data, which took 12 minutes and 40 seconds to run:
+I had to do some cleaning of the data before inserting it into the table, which I did in this [Jupyter Notebook](../data.ipynb). After that, I created [this script](../scripts/populate_db.py) to populate the database with the data, which took 12 minutes and 40 seconds to run:
 
 ![Populate DB](./screenshots/inserting_titles.png)
 ![Populate DB](./screenshots/inserted.png)
 
-After that, all 9,052,369 titles were in the database:
+And so, all 9,052,369 titles were successfully inserted into the database:
 
 ![Populate DB](./screenshots/title_count.png)
+
+Upon running the query `SELECT * FROM titles_title WHERE is_adult = true;` in psql, I found that it takes quite long to run queries. This could be due to the large amount of data in the table, and I will have to try to figure something out to make it faster. I will return to this problem later, once the backend is finished.
+
+### Backend
+
+I then carried out the following steps. Links are provided to the relevant files.
+
+1. Set up the project with Django
+    - Apps: accounts, reviews, titles, watchlist
+
+2. Create the models
+    - accounts
+        - [CustomUser](../movie_wizard/accounts/models.py)
+    - reviews
+        - Review
+    - titles
+        - [Title](../movie_wizard/titles/models.py)
+    - watchlist
+        - Watchlist
