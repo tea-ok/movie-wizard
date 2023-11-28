@@ -1,4 +1,6 @@
 data.csv
+data_10k.csv
+test_data.ipynb
 .env
 .DS_Store# Byte-compiled / optimized / DLL files
 __pycache__/
