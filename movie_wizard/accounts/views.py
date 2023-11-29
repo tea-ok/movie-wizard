@@ -57,6 +57,13 @@ def logout(request):
     request.user.auth_token.delete()
     return Response(status=status.HTTP_200_OK)
 
+# return authenticated user's date of birth
+@api_view(['GET'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def get_dob(request):
+    return Response(f'Your date of birth is {request.user.userprofile.date_of_birth}')
+
 # testing token
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
