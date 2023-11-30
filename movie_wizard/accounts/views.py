@@ -8,6 +8,7 @@ from .serializers import UserSerializer
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import authentication_classes, permission_classes
@@ -41,6 +42,9 @@ def login(request):
         return Response({'error': 'Incorrect password'}, status=status.HTTP_404_NOT_FOUND)
     token, created = Token.objects.get_or_create(user=user)
     serializer = UserSerializer(instance=user)
+
+    user.last_login = timezone.now()
+    user.save()
 
     response = HttpResponse()
     response['Content-Type'] = 'application/json'
