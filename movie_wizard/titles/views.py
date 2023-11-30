@@ -26,7 +26,7 @@ def paginated_titles(request):
         page_size_query_param = 'page_size' # user can override the default
 
     paginator = LargeResultsSetPagination()
-    titles = Title.objects.all().order_by('pk') # ensures consistent pagination
+    titles = Title.objects.all()
 
     # filtering
     requested_genres = request.GET.get('genre', None)
@@ -35,6 +35,8 @@ def paginated_titles(request):
     requested_primary_title = request.GET.get('primary_title', None)
     requested_runtime_minutes = request.GET.get('runtime_minutes', None)
     runtime_filter = request.GET.get('runtime_filter', None)  # 'above' or 'below'
+    sort_by = request.GET.get('sort_by', 'pk')  # default to sorting by primary key
+    sort_order = request.GET.get('sort_order', 'asc')  # default to ascending order
 
     if requested_genres:
         requested_genres = requested_genres.split(',')
@@ -53,6 +55,11 @@ def paginated_titles(request):
         elif runtime_filter == 'below':
             # some titles have a null runtime_minutes, so we treat these as 0 and return them if the filter is 'below'
             titles = titles.filter(Q(runtime_minutes__lt=requested_runtime_minutes) | Q(runtime_minutes__isnull=True))
+
+    # sorting
+    if sort_order == 'desc':
+        sort_by = f"-{sort_by}"  # add '-' for descending order
+    titles = titles.order_by(sort_by)
 
     result_page = paginator.paginate_queryset(titles, request)
     serializer = TitleSerializer(result_page, many=True)
