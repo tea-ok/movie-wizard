@@ -28,13 +28,15 @@ def paginated_titles(request):
     titles = Title.objects.all().order_by('pk') # ensures consistent pagination
 
     # filtering
-    requested_genre = request.GET.get('genre', None)
+    requested_genres = request.GET.get('genre', None)
     requested_title_type = request.GET.get('title_type', None)
     requested_start_year = request.GET.get('year', None)
     requested_primary_title = request.GET.get('primary_title', None)
 
-    if requested_genre:
-        titles = titles.filter(genres__icontains=requested_genre) # case insensitive
+    if requested_genres:
+        requested_genres = requested_genres.split(',')
+        for genre in requested_genres:
+            titles = titles.filter(genres__icontains=genre)
     if requested_title_type:
         titles = titles.filter(title_type__icontains=requested_title_type)
     if requested_start_year:
