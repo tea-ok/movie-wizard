@@ -1,4 +1,6 @@
 data.csv
+data_v1.csv
+data.tsv
 data_200k.csv
 test_data.ipynb
 test.rest
