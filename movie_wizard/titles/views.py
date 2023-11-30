@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Title
 from .serializers import TitleSerializer
 from rest_framework.pagination import PageNumberPagination
+from datetime import date
 
 # test purposes, not used in production due to performance issues
 @api_view(['GET'])
@@ -26,6 +27,17 @@ def paginated_titles(request):
 
     paginator = LargeResultsSetPagination()
     titles = Title.objects.all()
+
+    # age check, prevents users under 18 from seeing adult titles
+    user_profile = request.user.userprofile
+    user_date_of_birth = user_profile.date_of_birth if user_profile else None
+
+    if user_date_of_birth:
+        today = date.today()
+        user_age = today.year - user_date_of_birth.year - ((today.month, today.day) < (user_date_of_birth.month, user_date_of_birth.day))
+
+        if user_age and user_age < 18:
+            titles = titles.exclude(is_adult=True)
 
     # filtering
     requested_genres = request.GET.get('genre', None)

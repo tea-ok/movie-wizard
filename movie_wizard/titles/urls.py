@@ -2,6 +2,6 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path('', views.paginated_titles),
     path('all_titles', views.all_titles),
-    path('paginated_titles', views.paginated_titles),
 ]
