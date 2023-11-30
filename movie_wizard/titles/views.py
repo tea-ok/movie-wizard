@@ -25,7 +25,22 @@ def paginated_titles(request):
         page_size_query_param = 'page_size' # user can override the default
 
     paginator = LargeResultsSetPagination()
-    titles = Title.objects.all().order_by('primary_title') # ensures consistent pagination
+    titles = Title.objects.all().order_by('pk') # ensures consistent pagination
+
+    # filtering
+    requested_genre = request.GET.get('genre', None)
+    requested_title_type = request.GET.get('title_type', None)
+    requested_start_year = request.GET.get('year', None)
+    requested_primary_title = request.GET.get('primary_title', None)
+
+    if requested_genre:
+        titles = titles.filter(genres__icontains=requested_genre) # case insensitive
+    if requested_title_type:
+        titles = titles.filter(title_type__icontains=requested_title_type)
+    if requested_start_year:
+        titles = titles.filter(start_year=requested_start_year)
+    if requested_primary_title:
+        titles = titles.filter(primary_title__icontains=requested_primary_title)
 
     result_page = paginator.paginate_queryset(titles, request)
     serializer = TitleSerializer(result_page, many=True)
