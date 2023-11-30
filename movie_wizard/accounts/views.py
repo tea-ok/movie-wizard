@@ -67,10 +67,3 @@ def logout(request):
 @permission_classes([IsAuthenticated])
 def get_dob(request):
     return Response(f'Your date of birth is {request.user.userprofile.date_of_birth}')
-
-# testing token
-@api_view(['GET'])
-@authentication_classes([SessionAuthentication, TokenAuthentication])
-@permission_classes([IsAuthenticated])
-def test_token(request):
-    return Response(f'Hello {request.user.username}')
