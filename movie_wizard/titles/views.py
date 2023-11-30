@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Title
 from .serializers import TitleSerializer
 from rest_framework.pagination import PageNumberPagination
+from django.db.models import Q
 
 # test purposes, not used in production due to performance issues
 @api_view(['GET'])
@@ -32,6 +33,8 @@ def paginated_titles(request):
     requested_title_type = request.GET.get('title_type', None)
     requested_start_year = request.GET.get('year', None)
     requested_primary_title = request.GET.get('primary_title', None)
+    requested_runtime_minutes = request.GET.get('runtime_minutes', None)
+    runtime_filter = request.GET.get('runtime_filter', None)  # 'above' or 'below'
 
     if requested_genres:
         requested_genres = requested_genres.split(',')
@@ -43,6 +46,13 @@ def paginated_titles(request):
         titles = titles.filter(start_year=requested_start_year)
     if requested_primary_title:
         titles = titles.filter(primary_title__icontains=requested_primary_title)
+    
+    if requested_runtime_minutes and runtime_filter:
+        if runtime_filter == 'above':
+            titles = titles.filter(runtime_minutes__gt=requested_runtime_minutes)
+        elif runtime_filter == 'below':
+            # some titles have a null runtime_minutes, so we treat these as 0 and return them if the filter is 'below'
+            titles = titles.filter(Q(runtime_minutes__lt=requested_runtime_minutes) | Q(runtime_minutes__isnull=True))
 
     result_page = paginator.paginate_queryset(titles, request)
     serializer = TitleSerializer(result_page, many=True)
