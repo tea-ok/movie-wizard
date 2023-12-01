@@ -5,3 +5,4 @@ psycopg2-binary==2.9.9
 tqdm==4.66.1
 djangorestframework==3.14.0
 ipykernel==6.26.0
+django-cors-headers==4.3.1
