@@ -23,7 +23,7 @@ const RegisterForm = () => {
         e.preventDefault();
         try {
             const response = await axios.post(
-                "http://your-backend-api/api/accounts/register",
+                "http://127.0.0.1:8000/api/accounts/register",
                 formData
             );
 

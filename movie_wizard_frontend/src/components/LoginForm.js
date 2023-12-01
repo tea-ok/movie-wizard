@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { TextField, Button, Grid } from "@mui/material";
+import {
+    TextField,
+    Button,
+    Grid,
+    Container,
+    Typography,
+    Box,
+    Alert,
+} from "@mui/material";
 import axios from "axios";
 
 const LoginForm = ({ onLogin }) => {
@@ -7,6 +15,8 @@ const LoginForm = ({ onLogin }) => {
         username: "",
         password: "",
     });
+
+    const [error, setError] = useState(null);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -26,64 +36,72 @@ const LoginForm = ({ onLogin }) => {
             );
 
             if (response.status === 200) {
-                // Log the token from the auth header
                 const token = response.headers.authorization;
-                console.log("Login successful. Token:", token);
+                localStorage.setItem("token", token);
+                console.log("Token set in local storage: ", token);
+                // Use: const token = localStorage.getItem('token');
 
                 if (onLogin) {
                     onLogin(response.data);
                 }
-            } else {
-                console.error(
-                    "Login failed. Unexpected status:",
-                    response.status
-                );
             }
-        } catch (error) {
-            if (error.response) {
-                console.error(
-                    "Login failed. Server responded with:",
-                    error.response.data
-                );
+        } catch (err) {
+            if (err.response && err.response.status === 404) {
+                setError("Incorrect username or password.");
             } else {
-                console.error("Login failed. Error:", error.message);
+                setError("An error occurred. Please try again.");
             }
         }
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <Grid container spacing={2}>
-                <Grid item xs={12}>
-                    <TextField
-                        label="Username"
-                        variant="outlined"
-                        fullWidth
-                        margin="normal"
-                        name="username"
-                        value={formData.username}
-                        onChange={handleChange}
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                    <TextField
-                        label="Password"
-                        variant="outlined"
-                        fullWidth
-                        margin="normal"
-                        type="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                    <Button type="submit" variant="contained" color="primary">
-                        Login
-                    </Button>
-                </Grid>
-            </Grid>
-        </form>
+        <Container maxWidth="xs">
+            <Typography variant="h4" align="center" gutterBottom>
+                Login
+            </Typography>
+            <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+                <TextField
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="username"
+                    label="Username"
+                    name="username"
+                    autoComplete="username"
+                    autoFocus
+                    value={formData.username}
+                    onChange={handleChange}
+                />
+                <TextField
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="password"
+                    label="Password"
+                    type="password"
+                    id="password"
+                    autoComplete="current-password"
+                    value={formData.password}
+                    onChange={handleChange}
+                />
+                <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    sx={{ mt: 3, mb: 2 }}
+                >
+                    Sign In
+                </Button>
+                {error && (
+                    <Alert severity="error" sx={{ mt: 3 }}>
+                        {error}
+                    </Alert>
+                )}
+            </Box>
+        </Container>
     );
 };
 
