@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import { FormControl, InputLabel, Select, MenuItem, Chip } from "@mui/material";
 import { TextField, Button, Grid } from "@mui/material";
 import {
     Table,
@@ -21,6 +21,7 @@ const HomePage = () => {
     const [searchResults, setSearchResults] = useState([]);
     const [nextPage, setNextPage] = useState(null);
     const [sortOrder, setSortOrder] = useState("");
+    const [genres, setGenres] = useState([]);
 
     const handleSearch = async () => {
         try {
@@ -38,6 +39,7 @@ const HomePage = () => {
                     runtimeFilter === "all" ? undefined : runtimeFilter,
                 sort_by: sortBy,
                 sort_order: sortOrder,
+                genre: genres.join(","),
             };
 
             const token = localStorage.getItem("token");
@@ -168,6 +170,29 @@ const HomePage = () => {
                         >
                             <MenuItem value="asc">Ascending</MenuItem>
                             <MenuItem value="desc">Descending</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={2}>
+                    <FormControl fullWidth variant="outlined" margin="normal">
+                        <InputLabel>Genres</InputLabel>
+                        <Select
+                            multiple
+                            value={genres}
+                            onChange={(e) => setGenres(e.target.value)}
+                            label="Genres"
+                            renderValue={(selected) => (
+                                <div>
+                                    {selected.map((value) => (
+                                        <Chip key={value} label={value} />
+                                    ))}
+                                </div>
+                            )}
+                        >
+                            <MenuItem value="Documentary">Documentary</MenuItem>
+                            <MenuItem value="Drama">Drama</MenuItem>
+                            <MenuItem value="Action">Action</MenuItem>
+                            {/* Add more MenuItem components for other genres */}
                         </Select>
                     </FormControl>
                 </Grid>
