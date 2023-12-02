@@ -7,8 +7,17 @@ import {
     ListItemText,
     Paper,
     Box,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    TextField,
+    IconButton,
+    Button,
 } from "@mui/material";
 import { styled } from "@mui/system";
+import AddIcon from "@mui/icons-material/Add";
 import axios from "axios";
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -20,6 +29,43 @@ const TitleDetailPage = () => {
     const { titleId } = useParams();
     const [titleDetails, setTitleDetails] = useState(null);
     const [reviews, setReviews] = useState([]);
+    const [open, setOpen] = useState(false);
+    const [rating, setRating] = useState("");
+    const [text, setText] = useState("");
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    const handleReview = async () => {
+        const token = localStorage.getItem("token");
+        const config = {
+            headers: { Authorization: token },
+        };
+
+        const reviewData = {
+            title: titleId,
+            rating: rating,
+            text: text,
+        };
+
+        await axios.post(
+            "http://127.0.0.1:8000/api/reviews/create",
+            reviewData,
+            config
+        );
+        handleClose();
+
+        const response = await axios.get(
+            `http://127.0.0.1:8000/api/reviews/?title_id=${titleId}`,
+            config
+        );
+        setReviews(response.data);
+    };
 
     useEffect(() => {
         const fetchTitleDetails = async () => {
@@ -81,10 +127,17 @@ const TitleDetailPage = () => {
                 Genres: {titleDetails.genres}
             </Typography>
 
-            <Box mt={2}>
+            <Box display="flex" alignItems="flex-start" mt={2}>
                 <Typography variant="h5" gutterBottom>
                     Reviews
                 </Typography>
+                <IconButton
+                    edge="end"
+                    onClick={handleClickOpen}
+                    style={{ marginTop: "-3px" }}
+                >
+                    <AddIcon />
+                </IconButton>
             </Box>
             <List>
                 {reviews.map((review) => (
@@ -102,6 +155,36 @@ const TitleDetailPage = () => {
                     </ListItem>
                 ))}
             </List>
+            <Dialog open={open} onClose={handleClose}>
+                <DialogTitle>Add Review</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="rating"
+                            label="Rating"
+                            type="number"
+                            fullWidth
+                            value={rating}
+                            onChange={(e) => setRating(e.target.value)}
+                        />
+                        <TextField
+                            margin="dense"
+                            id="text"
+                            label="Review"
+                            type="text"
+                            fullWidth
+                            value={text}
+                            onChange={(e) => setText(e.target.value)}
+                        />
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button onClick={handleReview}>Submit</Button>
+                </DialogActions>
+            </Dialog>
         </Item>
     );
 };
