@@ -6,8 +6,6 @@ const RegisterPage = () => {
     const navigate = useNavigate();
 
     const handleRegister = (data) => {
-        // Handle the registration data, e.g. save the user data or token
-        // Then navigate to the /titles page
         navigate("/titles");
     };
 

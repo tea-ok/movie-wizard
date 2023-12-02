@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import {
     TextField,
     Button,
-    Grid,
     Container,
     Typography,
     Box,
     Alert,
+    Link,
 } from "@mui/material";
+import { Link as RouterLink } from "react-router-dom";
 import axios from "axios";
 
 const LoginForm = ({ onLogin }) => {
@@ -93,6 +94,13 @@ const LoginForm = ({ onLogin }) => {
                 >
                     Sign In
                 </Button>
+                <Typography variant="body2" align="center" sx={{ mt: 2 }}>
+                    Don't have an account? Sign up{" "}
+                    <Link component={RouterLink} to="/register">
+                        here
+                    </Link>
+                    !
+                </Typography>
                 {error && (
                     <Alert severity="error" sx={{ mt: 3 }}>
                         {error}
