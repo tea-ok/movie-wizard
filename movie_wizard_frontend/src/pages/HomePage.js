@@ -10,6 +10,7 @@ import {
     TableRow,
 } from "@mui/material";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const HomePage = () => {
     const [searchTerm, setSearchTerm] = useState("");
@@ -219,16 +220,32 @@ const HomePage = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {searchResults.map((result, index) => (
-                            <TableRow key={result.id || index}>
-                                <TableCell>{result.title_type}</TableCell>
-                                <TableCell>{result.primary_title}</TableCell>
-                                <TableCell>{result.original_title}</TableCell>
-                                <TableCell>{result.start_year}</TableCell>
-                                <TableCell>{result.runtime_minutes}</TableCell>
-                                <TableCell>{result.genres}</TableCell>
-                            </TableRow>
-                        ))}
+                        {searchResults.map((result, index) => {
+                            console.log("Result ID: ", result.id); // Log the result.id
+                            console.log(
+                                "Type of result.id: ",
+                                typeof result.id
+                            ); // Log the type of result.id (should be a number
+                            return (
+                                <TableRow key={result.id || index}>
+                                    <TableCell>{result.title_type}</TableCell>
+                                    <TableCell>
+                                        {/* Wrap the title in a Link component */}
+                                        <Link to={`/titles/${result.id}`}>
+                                            {result.primary_title}
+                                        </Link>
+                                    </TableCell>
+                                    <TableCell>
+                                        {result.original_title}
+                                    </TableCell>
+                                    <TableCell>{result.start_year}</TableCell>
+                                    <TableCell>
+                                        {result.runtime_minutes}
+                                    </TableCell>
+                                    <TableCell>{result.genres}</TableCell>
+                                </TableRow>
+                            );
+                        })}
                     </TableBody>
                 </Table>
             </TableContainer>
