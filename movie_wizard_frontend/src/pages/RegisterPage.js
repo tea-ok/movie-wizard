@@ -1,16 +1,27 @@
-import React from "react";
+import { Container, Box } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import RegisterForm from "../components/RegisterForm";
 
 const RegisterPage = () => {
-    const handleRegister = () => {
-        console.log("User registered!");
+    const navigate = useNavigate();
+
+    const handleRegister = (data) => {
+        // Handle the registration data, e.g. save the user data or token
+        // Then navigate to the /titles page
+        navigate("/titles");
     };
 
     return (
-        <div>
-            <h1>Register</h1>
-            <RegisterForm onSubmit={handleRegister} />
-        </div>
+        <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            minHeight="100vh"
+        >
+            <Container maxWidth="xs">
+                <RegisterForm onRegister={handleRegister} />
+            </Container>
+        </Box>
     );
 };
 

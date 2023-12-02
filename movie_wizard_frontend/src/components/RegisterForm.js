@@ -1,105 +1,117 @@
-import React, { useState } from "react";
-import { TextField, Button, Grid } from "@mui/material";
+import React from "react";
+import { Container, Typography, Box, TextField, Button } from "@mui/material";
 import axios from "axios";
 
-const RegisterForm = () => {
-    const [formData, setFormData] = useState({
-        firstName: "",
-        lastName: "",
-        username: "",
-        dob: "",
-        password: "",
-    });
+const RegisterForm = ({ onRegister }) => {
+    const [error, setError] = React.useState(null);
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
-    };
+    const handleSubmit = async (event) => {
+        event.preventDefault();
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+        const formData = new FormData(event.currentTarget);
+        formData.append("date_of_birth", formData.get("date_of_birth"));
+
         try {
             const response = await axios.post(
                 "http://127.0.0.1:8000/api/accounts/register",
                 formData
             );
 
-            console.log("Registration successful", response.data);
-        } catch (error) {
-            console.error("Registration failed", error.message);
+            if (response.status === 201) {
+                const token = response.headers.authorization;
+                localStorage.setItem("token", token);
+
+                if (onRegister) {
+                    onRegister(response.data);
+                }
+            }
+        } catch (err) {
+            setError("An error occurred. Please try again.");
         }
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
-                    <TextField
-                        label="First Name"
-                        variant="outlined"
-                        fullWidth
-                        margin="normal"
-                        name="firstName"
-                        value={formData.firstName}
-                        onChange={handleChange}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <TextField
-                        label="Last Name"
-                        variant="outlined"
-                        fullWidth
-                        margin="normal"
-                        name="lastName"
-                        value={formData.lastName}
-                        onChange={handleChange}
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                    <TextField
-                        label="Username"
-                        variant="outlined"
-                        fullWidth
-                        margin="normal"
-                        name="username"
-                        value={formData.username}
-                        onChange={handleChange}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <TextField
-                        label="Date of Birth"
-                        variant="outlined"
-                        fullWidth
-                        margin="normal"
-                        type="date"
-                        name="dob"
-                        value={formData.dob}
-                        onChange={handleChange}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <TextField
-                        label="Password"
-                        variant="outlined"
-                        fullWidth
-                        margin="normal"
-                        type="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                    <Button type="submit" variant="contained" color="primary">
-                        Register
-                    </Button>
-                </Grid>
-            </Grid>
-        </form>
+        <Container maxWidth="xs">
+            <Typography variant="h4" align="center" gutterBottom>
+                Register
+            </Typography>
+            <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+                <TextField
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="first_name"
+                    label="First Name"
+                    name="first_name"
+                    autoComplete="given-name"
+                    autoFocus
+                />
+                <TextField
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="last_name"
+                    label="Last Name"
+                    name="last_name"
+                    autoComplete="family-name"
+                />
+                <TextField
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="email"
+                    label="Email"
+                    name="email"
+                    autoComplete="email"
+                />
+                <TextField
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="username"
+                    label="Username"
+                    name="username"
+                    autoComplete="username"
+                />
+                <TextField
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="password"
+                    label="Password"
+                    name="password"
+                    type="password"
+                    autoComplete="new-password"
+                />
+                <TextField
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="date_of_birth"
+                    label="Date of Birth"
+                    name="date_of_birth"
+                    type="date"
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                />
+                <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    sx={{ mt: 3, mb: 2 }}
+                >
+                    Register
+                </Button>
+            </Box>
+        </Container>
     );
 };
 

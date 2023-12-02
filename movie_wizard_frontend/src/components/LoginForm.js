@@ -38,8 +38,6 @@ const LoginForm = ({ onLogin }) => {
             if (response.status === 200) {
                 const token = response.headers.authorization;
                 localStorage.setItem("token", token);
-                console.log("Token set in local storage: ", token);
-                // Use: const token = localStorage.getItem('token');
 
                 if (onLogin) {
                     onLogin(response.data);
