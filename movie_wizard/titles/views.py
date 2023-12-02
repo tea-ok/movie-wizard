@@ -20,10 +20,8 @@ def all_titles(request):
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def title(request):
-    # pk is the primary key of the title
-    pk = request.data.get('pk')
-    title = Title.objects.get(id=pk)
+def title(request, id):
+    title = Title.objects.get(id=id)
     serializer = TitleSerializer(title, many=False)
     return Response(serializer.data)
 
