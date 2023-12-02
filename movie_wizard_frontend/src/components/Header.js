@@ -14,7 +14,7 @@ const Header = () => {
                     "http://127.0.0.1:8000/api/accounts/logout",
                     {},
                     {
-                        headers: { Authorization: `Token ${token}` },
+                        headers: { Authorization: token },
                     }
                 );
                 localStorage.removeItem("token");
