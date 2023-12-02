@@ -18,6 +18,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/system";
 import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -32,15 +33,26 @@ const TitleDetailPage = () => {
     const [open, setOpen] = useState(false);
     const [rating, setRating] = useState("");
     const [text, setText] = useState("");
+    const [deleteId, setDeleteId] = useState(null);
+    const [deleteOpen, setDeleteOpen] = useState(false);
+    const [addOpen, setAddOpen] = useState(false);
 
-    const handleClickOpen = () => {
-        setOpen(true);
+    const handleClickOpenDelete = (id) => {
+        setDeleteId(id);
+        setDeleteOpen(true);
     };
 
-    const handleClose = () => {
-        setOpen(false);
+    const handleClickOpenAdd = () => {
+        setAddOpen(true);
     };
 
+    const handleCloseDelete = () => {
+        setDeleteOpen(false);
+    };
+
+    const handleCloseAdd = () => {
+        setAddOpen(false);
+    };
     const handleReview = async () => {
         const token = localStorage.getItem("token");
         const config = {
@@ -58,7 +70,26 @@ const TitleDetailPage = () => {
             reviewData,
             config
         );
-        handleClose();
+        handleCloseAdd();
+
+        const response = await axios.get(
+            `http://127.0.0.1:8000/api/reviews/?title_id=${titleId}`,
+            config
+        );
+        setReviews(response.data);
+    };
+
+    const handleDelete = async () => {
+        const token = localStorage.getItem("token");
+        const config = {
+            headers: { Authorization: token },
+        };
+
+        await axios.delete(
+            `http://127.0.0.1:8000/api/reviews/remove?review_id=${deleteId}`,
+            config
+        );
+        handleCloseDelete();
 
         const response = await axios.get(
             `http://127.0.0.1:8000/api/reviews/?title_id=${titleId}`,
@@ -133,7 +164,7 @@ const TitleDetailPage = () => {
                 </Typography>
                 <IconButton
                     edge="end"
-                    onClick={handleClickOpen}
+                    onClick={handleClickOpenAdd}
                     style={{ marginTop: "-3px" }}
                 >
                     <AddIcon />
@@ -152,10 +183,37 @@ const TitleDetailPage = () => {
                                 </>
                             }
                         />
+                        <IconButton
+                            edge="end"
+                            onClick={() => handleClickOpenDelete(review.id)}
+                        >
+                            <DeleteIcon />
+                        </IconButton>
                     </ListItem>
                 ))}
             </List>
-            <Dialog open={open} onClose={handleClose}>
+            <Dialog
+                open={deleteOpen}
+                onClose={handleCloseDelete}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {"Delete review?"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Are you sure you want to delete this review?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDelete}>Cancel</Button>
+                    <Button onClick={handleDelete} autoFocus>
+                        Delete
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog open={addOpen} onClose={handleCloseAdd}>
                 <DialogTitle>Add Review</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
@@ -181,7 +239,7 @@ const TitleDetailPage = () => {
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button onClick={handleCloseAdd}>Cancel</Button>
                     <Button onClick={handleReview}>Submit</Button>
                 </DialogActions>
             </Dialog>

@@ -80,3 +80,20 @@ def update_review(request):
         serializer.save()
         return Response(serializer.data, status=200)
     return Response(serializer.errors, status=400)
+
+@api_view(['DELETE'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def delete_review(request):
+    review_id = request.query_params.get('review_id')
+    if not review_id:
+        return Response({'error': 'Review ID is required.'}, status=400)
+    if not review_id.isdigit():
+        return Response({'error': 'Invalid review_id.'}, status=400)
+
+    review = get_object_or_404(Review, pk=review_id)
+    if review.user != request.user:
+        return Response({'error': 'You do not have permission to delete this review.'}, status=403)
+
+    review.delete()
+    return Response(status=204)
