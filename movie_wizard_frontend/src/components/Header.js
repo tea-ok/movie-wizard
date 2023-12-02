@@ -6,6 +6,10 @@ import axios from "axios";
 const Header = () => {
     const navigate = useNavigate();
 
+    const handleWatchlist = () => {
+        navigate("/watchlist"); // Go to the watchlist page
+    };
+
     const handleLogout = async () => {
         const token = localStorage.getItem("token");
         if (token) {
@@ -44,6 +48,9 @@ const Header = () => {
                 <Typography variant="h6" sx={{ flexGrow: 1 }}>
                     Movie Wizard
                 </Typography>
+                <Button color="inherit" onClick={handleWatchlist}>
+                    Watchlist
+                </Button>
                 <Button color="inherit" onClick={handleLogout}>
                     Logout
                 </Button>
