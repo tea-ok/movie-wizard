@@ -30,7 +30,7 @@ def add_to_watchlist(request):
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def remove_from_watchlist(request):
-    title_id = request.query_params.get('title_id')
-    title = get_object_or_404(Title, pk=title_id)
-    Watchlist.objects.filter(user=request.user, title=title).delete()
+    watchlist_id = request.query_params.get('id')
+    watchlist_item = get_object_or_404(Watchlist, pk=watchlist_id, user=request.user)
+    watchlist_item.delete()
     return Response(status=204)

@@ -22,6 +22,7 @@ const Header = () => {
                     }
                 );
                 localStorage.removeItem("token");
+                localStorage.removeItem("username");
 
                 navigate("/login");
             } catch (error) {
