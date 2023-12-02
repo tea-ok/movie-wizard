@@ -24,7 +24,6 @@ const TitleDetailPage = () => {
     useEffect(() => {
         const fetchTitleDetails = async () => {
             try {
-                console.log("titleId retreived:", titleId);
                 const titleUrl = `http://127.0.0.1:8000/api/titles/title?id=${titleId}`;
                 const reviewsUrl = `http://127.0.0.1:8000/api/reviews/?title_id=${titleId}`;
 

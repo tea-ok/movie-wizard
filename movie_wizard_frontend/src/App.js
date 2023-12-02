@@ -4,15 +4,45 @@ import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
 import TitleDetailPage from "./pages/TitleDetailPage";
+import Header from "./components/Header";
+
+// Layout component
+const Layout = ({ children }) => (
+    <div>
+        <Header />
+        {children}
+    </div>
+);
 
 function App() {
     return (
         <Router>
             <Routes>
-                <Route path="/register" element={<RegisterPage />} />
+                <Route
+                    path="/register"
+                    element={
+                        <Layout>
+                            <RegisterPage />
+                        </Layout>
+                    }
+                />
                 <Route path="/login" element={<LoginPage />} />
-                <Route path="/titles" element={<HomePage />} />
-                <Route path="/titles/:titleId" element={<TitleDetailPage />} />
+                <Route
+                    path="/titles"
+                    element={
+                        <Layout>
+                            <HomePage />
+                        </Layout>
+                    }
+                />
+                <Route
+                    path="/titles/:titleId"
+                    element={
+                        <Layout>
+                            <TitleDetailPage />
+                        </Layout>
+                    }
+                />
             </Routes>
         </Router>
     );

@@ -221,11 +221,6 @@ const HomePage = () => {
                     </TableHead>
                     <TableBody>
                         {searchResults.map((result, index) => {
-                            console.log("Result ID: ", result.id); // Log the result.id
-                            console.log(
-                                "Type of result.id: ",
-                                typeof result.id
-                            ); // Log the type of result.id (should be a number
                             return (
                                 <TableRow key={result.id || index}>
                                     <TableCell>{result.title_type}</TableCell>
