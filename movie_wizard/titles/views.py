@@ -20,6 +20,16 @@ def all_titles(request):
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
+def title(request):
+    # pk is the primary key of the title
+    pk = request.data.get('pk')
+    title = Title.objects.get(id=pk)
+    serializer = TitleSerializer(title, many=False)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+@authentication_classes([SessionAuthentication, TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def paginated_titles(request):
     class LargeResultsSetPagination(PageNumberPagination):
         page_size = 25  # default page size
