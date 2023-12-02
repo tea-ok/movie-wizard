@@ -1,6 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import {
+    Typography,
+    List,
+    ListItem,
+    ListItemText,
+    Paper,
+    Box,
+} from "@mui/material";
+import { styled } from "@mui/system";
 import axios from "axios";
+
+const Item = styled(Paper)(({ theme }) => ({
+    margin: theme.spacing(2),
+    padding: theme.spacing(2),
+}));
 
 const TitleDetailPage = () => {
     const { titleId } = useParams();
@@ -45,26 +59,51 @@ const TitleDetailPage = () => {
     }
 
     return (
-        <div>
-            <h1>{titleDetails.primary_title}</h1>
-            <p>Title Type: {titleDetails.title_type}</p>
-            <p>Original Title: {titleDetails.original_title}</p>
-            <p>Adult-only title: {titleDetails.is_adult ? "Yes" : "No"}</p>
-            <p>Start Year: {titleDetails.start_year}</p>
-            <p>Runtime (in minutes): {titleDetails.runtime_minutes}</p>
-            <p>Genres: {titleDetails.genres}</p>
+        <Item>
+            <Typography variant="h4" gutterBottom>
+                {titleDetails.primary_title}
+            </Typography>
+            <Typography variant="subtitle1">
+                Title Type: {titleDetails.title_type}
+            </Typography>
+            <Typography variant="subtitle1">
+                Original Title: {titleDetails.original_title}
+            </Typography>
+            <Typography variant="subtitle1">
+                Adult-only title: {titleDetails.is_adult ? "Yes" : "No"}
+            </Typography>
+            <Typography variant="subtitle1">
+                Start Year: {titleDetails.start_year}
+            </Typography>
+            <Typography variant="subtitle1">
+                Runtime (in minutes): {titleDetails.runtime_minutes}
+            </Typography>
+            <Typography variant="subtitle1">
+                Genres: {titleDetails.genres}
+            </Typography>
 
-            <h2>Reviews</h2>
-            <ul>
+            <Box mt={2}>
+                <Typography variant="h5" gutterBottom>
+                    Reviews
+                </Typography>
+            </Box>
+            <List>
                 {reviews.map((review) => (
-                    <li key={review.id}>
-                        <h3>{review.user.username}</h3>
-                        <h4>Rating: {review.rating}/5</h4>
-                        <p>{review.text}</p>
-                    </li>
+                    <ListItem key={review.id}>
+                        <ListItemText
+                            primary={<strong>{review.user.username}</strong>}
+                            secondary={
+                                <>
+                                    <strong>Rating:</strong> {review.rating}/5
+                                    <br />
+                                    {review.text}
+                                </>
+                            }
+                        />
+                    </ListItem>
                 ))}
-            </ul>
-        </div>
+            </List>
+        </Item>
     );
 };
 
