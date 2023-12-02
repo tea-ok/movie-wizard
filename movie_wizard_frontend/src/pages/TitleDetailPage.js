@@ -15,6 +15,7 @@ import {
     TextField,
     IconButton,
     Button,
+    Snackbar,
 } from "@mui/material";
 import { styled } from "@mui/system";
 import AddIcon from "@mui/icons-material/Add";
@@ -30,12 +31,12 @@ const TitleDetailPage = () => {
     const { titleId } = useParams();
     const [titleDetails, setTitleDetails] = useState(null);
     const [reviews, setReviews] = useState([]);
-    const [open, setOpen] = useState(false);
     const [rating, setRating] = useState("");
     const [text, setText] = useState("");
     const [deleteId, setDeleteId] = useState(null);
     const [deleteOpen, setDeleteOpen] = useState(false);
     const [addOpen, setAddOpen] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
     const handleClickOpenDelete = (id) => {
         setDeleteId(id);
@@ -85,17 +86,25 @@ const TitleDetailPage = () => {
             headers: { Authorization: token },
         };
 
-        await axios.delete(
-            `http://127.0.0.1:8000/api/reviews/remove?review_id=${deleteId}`,
-            config
-        );
-        handleCloseDelete();
+        try {
+            await axios.delete(
+                `http://127.0.0.1:8000/api/reviews/remove?review_id=${deleteId}`,
+                config
+            );
+            handleCloseDelete();
 
-        const response = await axios.get(
-            `http://127.0.0.1:8000/api/reviews/?title_id=${titleId}`,
-            config
-        );
-        setReviews(response.data);
+            const response = await axios.get(
+                `http://127.0.0.1:8000/api/reviews/?title_id=${titleId}`,
+                config
+            );
+            setReviews(response.data);
+        } catch (error) {
+            if (error.response && error.response.status === 403) {
+                setErrorMessage(
+                    "Naughty, naughty! You can only delete your own reviews!"
+                );
+            }
+        }
     };
 
     useEffect(() => {
@@ -243,6 +252,14 @@ const TitleDetailPage = () => {
                     <Button onClick={handleReview}>Submit</Button>
                 </DialogActions>
             </Dialog>
+            {errorMessage && (
+                <Snackbar
+                    open={!!errorMessage}
+                    autoHideDuration={6000}
+                    onClose={() => setErrorMessage("")}
+                    message={errorMessage}
+                />
+            )}
         </Item>
     );
 };
