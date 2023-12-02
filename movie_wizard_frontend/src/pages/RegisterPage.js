@@ -6,6 +6,9 @@ const RegisterPage = () => {
     const navigate = useNavigate();
 
     const handleRegister = (data) => {
+        const username = data.user.username;
+        localStorage.setItem("username", username);
+        console.log(`Welcome to the platform, ${username}!`);
         navigate("/titles");
     };
 

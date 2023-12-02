@@ -7,7 +7,9 @@ const LoginPage = () => {
     const navigate = useNavigate();
 
     const handleLogin = async (userData) => {
-        console.log(`Hello, ${userData.user.username}!`);
+        const username = userData.user.username;
+        localStorage.setItem("username", username);
+        console.log(`Hello, ${username}!`);
         // After successful login, redirect to /titles
         navigate("/titles");
     };

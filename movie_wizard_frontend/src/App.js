@@ -5,6 +5,7 @@ import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
 import TitleDetailPage from "./pages/TitleDetailPage";
 import Header from "./components/Header";
+import Watchlist from "./pages/Watchlist";
 
 // Layout component
 const Layout = ({ children }) => (
@@ -33,6 +34,14 @@ function App() {
                     element={
                         <Layout>
                             <TitleDetailPage />
+                        </Layout>
+                    }
+                />
+                <Route
+                    path="/watchlist"
+                    element={
+                        <Layout>
+                            <Watchlist />
                         </Layout>
                     }
                 />
