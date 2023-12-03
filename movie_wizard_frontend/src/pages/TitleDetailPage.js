@@ -20,6 +20,7 @@ import {
 import { styled } from "@mui/system";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import axios from "axios";
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -37,6 +38,10 @@ const TitleDetailPage = () => {
     const [deleteOpen, setDeleteOpen] = useState(false);
     const [addOpen, setAddOpen] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const [updateOpen, setUpdateOpen] = useState(false);
+    const [updateId, setUpdateId] = useState(null);
+    const [updateRating, setUpdateRating] = useState("");
+    const [updateReview, setUpdateReview] = useState("");
 
     const handleClickOpenDelete = (id) => {
         setDeleteId(id);
@@ -47,6 +52,13 @@ const TitleDetailPage = () => {
         setAddOpen(true);
     };
 
+    const handleClickOpenUpdate = (id, rating, review) => {
+        setUpdateId(id);
+        setUpdateRating(rating);
+        setUpdateReview(review);
+        setUpdateOpen(true);
+    };
+
     const handleCloseDelete = () => {
         setDeleteOpen(false);
     };
@@ -54,6 +66,11 @@ const TitleDetailPage = () => {
     const handleCloseAdd = () => {
         setAddOpen(false);
     };
+
+    const handleCloseUpdate = () => {
+        setUpdateOpen(false);
+    };
+
     const handleReview = async () => {
         const token = localStorage.getItem("token");
         const config = {
@@ -66,18 +83,25 @@ const TitleDetailPage = () => {
             text: text,
         };
 
-        await axios.post(
-            "http://127.0.0.1:8000/api/reviews/create",
-            reviewData,
-            config
-        );
-        handleCloseAdd();
+        try {
+            await axios.post(
+                "http://127.0.0.1:8000/api/reviews/create",
+                reviewData,
+                config
+            );
+            handleCloseAdd();
 
-        const response = await axios.get(
-            `http://127.0.0.1:8000/api/reviews/?title_id=${titleId}`,
-            config
-        );
-        setReviews(response.data);
+            const response = await axios.get(
+                `http://127.0.0.1:8000/api/reviews/?title_id=${titleId}`,
+                config
+            );
+            setReviews(response.data);
+        } catch (error) {
+            if (error.response && error.response.status === 400) {
+                // Server-side validation error, rating must be between 1 and 5
+                setErrorMessage(error.response.data.rating[0]);
+            }
+        }
     };
 
     const handleDelete = async () => {
@@ -102,6 +126,37 @@ const TitleDetailPage = () => {
             if (error.response && error.response.status === 403) {
                 setErrorMessage(
                     "Naughty, naughty! You can only delete your own reviews!"
+                );
+            }
+        }
+    };
+
+    const handleUpdate = async () => {
+        const token = localStorage.getItem("token");
+        const config = {
+            headers: { Authorization: token },
+        };
+
+        try {
+            await axios.put(
+                `http://127.0.0.1:8000/api/reviews/update?review_id=${updateId}`,
+                { rating: updateRating, review: updateReview },
+                config
+            );
+            handleCloseUpdate();
+
+            const response = await axios.get(
+                `http://127.0.0.1:8000/api/reviews/?title_id=${titleId}`,
+                config
+            );
+            setReviews(response.data);
+        } catch (error) {
+            if (error.response && error.response.status === 400) {
+                // Server-side validation error, rating must be between 1 and 5
+                setErrorMessage(error.response.data.rating[0]);
+            } else if (error.response && error.response.status === 403) {
+                setErrorMessage(
+                    "Naughty, naughty! You can only update your own reviews!"
                 );
             }
         }
@@ -193,6 +248,17 @@ const TitleDetailPage = () => {
                             }
                         />
                         <IconButton
+                            onClick={() =>
+                                handleClickOpenUpdate(
+                                    review.id,
+                                    review.rating,
+                                    review.review
+                                )
+                            }
+                        >
+                            <EditIcon />
+                        </IconButton>
+                        <IconButton
                             edge="end"
                             onClick={() => handleClickOpenDelete(review.id)}
                         >
@@ -250,6 +316,38 @@ const TitleDetailPage = () => {
                 <DialogActions>
                     <Button onClick={handleCloseAdd}>Cancel</Button>
                     <Button onClick={handleReview}>Submit</Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog open={updateOpen} onClose={handleCloseUpdate}>
+                <DialogTitle>Update Review</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="rating"
+                        label="Rating"
+                        type="number"
+                        fullWidth
+                        value={updateRating}
+                        onChange={(e) => setUpdateRating(e.target.value)}
+                    />
+                    <TextField
+                        margin="dense"
+                        id="review"
+                        label="Review"
+                        type="text"
+                        fullWidth
+                        value={updateReview}
+                        onChange={(e) => setUpdateReview(e.target.value)}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseUpdate} color="primary">
+                        Cancel
+                    </Button>
+                    <Button onClick={handleUpdate} color="primary">
+                        Update
+                    </Button>
                 </DialogActions>
             </Dialog>
             {errorMessage && (

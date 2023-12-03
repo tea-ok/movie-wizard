@@ -22,7 +22,7 @@ def watchlist(request):
 def add_to_watchlist(request):
     title_id = request.query_params.get('title_id')
     title = get_object_or_404(Title, pk=title_id)
-    watchlist_item, created = Watchlist.objects.get_or_create(user=request.user, title=title)
+    watchlist_item, created = Watchlist.objects.get_or_create(user=request.user, title=title) # if already in watchist, return it, else create it
     serializer = WatchlistSerializer(watchlist_item)
     return Response(serializer.data, status=201 if created else 200)
 
