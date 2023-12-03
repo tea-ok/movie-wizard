@@ -27,7 +27,7 @@ First, clone the repo and navigate to the root directory.
 
 #### Backend
 
-1. Create a virtual environment and activate it (optional, but recommended):
+1. Create a virtual environment and activate it (optional, but recommended. Shown here with Anaconda):
     ```
     conda create -n movie-wizard
     conda activate movie-wizard
@@ -36,7 +36,7 @@ First, clone the repo and navigate to the root directory.
     ```
     pip install -r requirements.txt
     ```
-3. Create an `.env` file in the [`/movie_wizard/movie_wizard`](./movie_wizard/movie_wizard/) directory and add the following:
+3. Navigate to the [`/movie_wizard/movie_wizard`](./movie_wizard/movie_wizard/) directory and add an `.env` file with the following variables:
     ```
     DATABASE_NAME=db_name
     DATABASE_USER=db_user
@@ -67,6 +67,12 @@ First, clone the repo and navigate to the root directory.
     ```
     npm start
     ```
+
+### Database Schema
+
+Django's ORM was used to create the database schema. It adds a few extra tables for authentication and session management, but the main tables are shown below (generated with PgAdmin):
+
+![Database Schema](./docs/images/ERD.jpeg)
 
 ### Author
 
