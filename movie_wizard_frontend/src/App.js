@@ -1,5 +1,10 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+    BrowserRouter as Router,
+    Route,
+    Routes,
+    Navigate,
+} from "react-router-dom";
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
@@ -15,6 +20,19 @@ const Layout = ({ children }) => (
     </div>
 );
 
+const isAuthenticated = () => {
+    const token = localStorage.getItem("token");
+    return !!token;
+};
+
+const PrivateRoute = ({ element, path }) => {
+    return isAuthenticated() ? (
+        <Layout>{element}</Layout>
+    ) : (
+        <Navigate to="/login" replace state={{ from: path }} />
+    );
+};
+
 function App() {
     return (
         <Router>
@@ -24,25 +42,25 @@ function App() {
                 <Route
                     path="/titles"
                     element={
-                        <Layout>
-                            <HomePage />
-                        </Layout>
+                        <PrivateRoute path="/titles" element={<HomePage />} />
                     }
                 />
                 <Route
                     path="/titles/:titleId"
                     element={
-                        <Layout>
-                            <TitleDetailPage />
-                        </Layout>
+                        <PrivateRoute
+                            path="/titles/:titleId"
+                            element={<TitleDetailPage />}
+                        />
                     }
                 />
                 <Route
                     path="/watchlist"
                     element={
-                        <Layout>
-                            <Watchlist />
-                        </Layout>
+                        <PrivateRoute
+                            path="/watchlist"
+                            element={<Watchlist />}
+                        />
                     }
                 />
             </Routes>
