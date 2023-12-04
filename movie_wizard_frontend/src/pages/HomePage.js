@@ -11,6 +11,12 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import AddIcon from "@mui/icons-material/Add";
+import IconButton from "@mui/material/IconButton";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 
 const HomePage = () => {
     const [searchTerm, setSearchTerm] = useState("");
@@ -23,6 +29,8 @@ const HomePage = () => {
     const [nextPage, setNextPage] = useState(null);
     const [sortOrder, setSortOrder] = useState("");
     const [genres, setGenres] = useState([]);
+    const [errorMessage, setErrorMessage] = useState("");
+    const [open, setOpen] = useState(false);
 
     const handleSearch = async () => {
         try {
@@ -81,178 +89,273 @@ const HomePage = () => {
         }
     };
 
+    const handleAddToWatchlist = async (titleId) => {
+        const token = localStorage.getItem("token");
+        const config = {
+            headers: { Authorization: token },
+        };
+
+        try {
+            const response = await axios.post(
+                `http://127.0.0.1:8000/api/watchlist/add?title_id=${titleId}`,
+                {},
+                config
+            );
+
+            if (response.status === 200) {
+                setErrorMessage(
+                    <>
+                        This title is already in your watchlist. Check it out{" "}
+                        <Link to="/watchlist">here</Link>.
+                    </>
+                );
+                setOpen(true);
+            } else if (response.status === 201) {
+                setErrorMessage("Title was added to your watchlist.");
+                setOpen(true);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     return (
         <div>
-            <h1>Home Page</h1>
-            <Grid container spacing={2}>
-                <Grid item xs={12}>
-                    <TextField
-                        label="Search"
-                        variant="outlined"
-                        fullWidth
-                        margin="normal"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                </Grid>
-                <Grid item xs={2}>
-                    <FormControl fullWidth variant="outlined" margin="normal">
-                        <InputLabel>Title Type</InputLabel>
-                        <Select
-                            value={titleType}
-                            onChange={(e) => setTitleType(e.target.value)}
-                            label="Title Type"
-                        >
-                            <MenuItem value="all">All</MenuItem>
-                            <MenuItem value="movie">Movie</MenuItem>
-                            <MenuItem value="tvseries">TV Series</MenuItem>
-                            <MenuItem value="tvepisode">TV Episode</MenuItem>
-                        </Select>
-                    </FormControl>
-                </Grid>
-                <Grid item xs={2}>
-                    <TextField
-                        label="Year"
-                        variant="outlined"
-                        fullWidth
-                        margin="normal"
-                        value={year}
-                        onChange={(e) => setYear(e.target.value)}
-                    />
-                </Grid>
-                <Grid item xs={2}>
-                    <TextField
-                        label="Runtime Minutes"
-                        variant="outlined"
-                        fullWidth
-                        margin="normal"
-                        value={runtimeMinutes}
-                        onChange={(e) => setRuntimeMinutes(e.target.value)}
-                    />
-                </Grid>
-                <Grid item xs={2}>
-                    <FormControl fullWidth variant="outlined" margin="normal">
-                        <InputLabel>Runtime Filter</InputLabel>
-                        <Select
-                            value={runtimeFilter}
-                            onChange={(e) => setRuntimeFilter(e.target.value)}
-                            label="Runtime Filter"
-                        >
-                            <MenuItem value="above">Above</MenuItem>
-                            <MenuItem value="below">Below</MenuItem>
-                        </Select>
-                    </FormControl>
-                </Grid>
-                <Grid item xs={2}>
-                    <FormControl fullWidth variant="outlined" margin="normal">
-                        <InputLabel>Sort By</InputLabel>
-                        <Select
-                            value={sortBy}
-                            onChange={(e) => setSortBy(e.target.value)}
-                            label="Sort By"
-                        >
-                            <MenuItem value="primary_title">
-                                Primary Title
-                            </MenuItem>
-                            <MenuItem value="runtime_minutes">
-                                Runtime Minutes
-                            </MenuItem>
-                            <MenuItem value="start_year">Year</MenuItem>
-                        </Select>
-                    </FormControl>
-                </Grid>
-                <Grid item xs={2}>
-                    <FormControl fullWidth variant="outlined" margin="normal">
-                        <InputLabel>Sort Order</InputLabel>
-                        <Select
-                            value={sortOrder}
-                            onChange={(e) => setSortOrder(e.target.value)}
-                            label="Sort Order"
-                        >
-                            <MenuItem value="asc">Ascending</MenuItem>
-                            <MenuItem value="desc">Descending</MenuItem>
-                        </Select>
-                    </FormControl>
-                </Grid>
-                <Grid item xs={2}>
-                    <FormControl fullWidth variant="outlined" margin="normal">
-                        <InputLabel>Genres</InputLabel>
-                        <Select
-                            multiple
-                            value={genres}
-                            onChange={(e) => setGenres(e.target.value)}
-                            label="Genres"
-                            renderValue={(selected) => (
-                                <div>
-                                    {selected.map((value) => (
-                                        <Chip key={value} label={value} />
-                                    ))}
-                                </div>
-                            )}
-                        >
-                            <MenuItem value="Documentary">Documentary</MenuItem>
-                            <MenuItem value="Drama">Drama</MenuItem>
-                            <MenuItem value="Action">Action</MenuItem>
-                            {/* Add more MenuItem components for other genres */}
-                        </Select>
-                    </FormControl>
-                </Grid>
-                <Grid item xs={2}>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={handleSearch}
-                    >
-                        Search
-                    </Button>
-                </Grid>
-            </Grid>
-            <TableContainer>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Title Type</TableCell>
-                            <TableCell>Primary Title</TableCell>
-                            <TableCell>Original Title</TableCell>
-                            <TableCell>Year</TableCell>
-                            <TableCell>Runtime Minutes</TableCell>
-                            <TableCell>Genres</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {searchResults.map((result, index) => {
-                            return (
-                                <TableRow key={result.id || index}>
-                                    <TableCell>{result.title_type}</TableCell>
-                                    <TableCell>
-                                        {/* Wrap the title in a Link component */}
-                                        <Link to={`/titles/${result.id}`}>
-                                            {result.primary_title}
-                                        </Link>
-                                    </TableCell>
-                                    <TableCell>
-                                        {result.original_title}
-                                    </TableCell>
-                                    <TableCell>{result.start_year}</TableCell>
-                                    <TableCell>
-                                        {result.runtime_minutes}
-                                    </TableCell>
-                                    <TableCell>{result.genres}</TableCell>
-                                </TableRow>
-                            );
-                        })}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-            {nextPage && (
-                <Button
-                    variant="outlined"
-                    color="primary"
-                    onClick={handleLoadMore}
+            <Box
+                display="flex"
+                flexDirection="column"
+                justifyContent="center"
+                alignItems="center"
+                minHeight="100vh"
+            >
+                <Typography
+                    variant="h4"
+                    component="h1"
+                    gutterBottom
+                    align="center"
                 >
-                    Load More
-                </Button>
-            )}
+                    Movie Wizard - Home of the Best Movies and TV Shows
+                </Typography>
+                {/* Consider removing Box and replacing Typography with an h1 */}
+                <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                        <TextField
+                            label="Search"
+                            variant="outlined"
+                            fullWidth
+                            margin="normal"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </Grid>
+                    <Grid item xs={2}>
+                        <FormControl
+                            fullWidth
+                            variant="outlined"
+                            margin="normal"
+                        >
+                            <InputLabel>Title Type</InputLabel>
+                            <Select
+                                value={titleType}
+                                onChange={(e) => setTitleType(e.target.value)}
+                                label="Title Type"
+                            >
+                                <MenuItem value="all">All</MenuItem>
+                                <MenuItem value="movie">Movie</MenuItem>
+                                <MenuItem value="tvseries">TV Series</MenuItem>
+                                <MenuItem value="tvepisode">
+                                    TV Episode
+                                </MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={2}>
+                        <TextField
+                            label="Year"
+                            variant="outlined"
+                            fullWidth
+                            margin="normal"
+                            value={year}
+                            onChange={(e) => setYear(e.target.value)}
+                        />
+                    </Grid>
+                    <Grid item xs={2}>
+                        <TextField
+                            label="Runtime Minutes"
+                            variant="outlined"
+                            fullWidth
+                            margin="normal"
+                            value={runtimeMinutes}
+                            onChange={(e) => setRuntimeMinutes(e.target.value)}
+                        />
+                    </Grid>
+                    <Grid item xs={2}>
+                        <FormControl
+                            fullWidth
+                            variant="outlined"
+                            margin="normal"
+                        >
+                            <InputLabel>Runtime Filter</InputLabel>
+                            <Select
+                                value={runtimeFilter}
+                                onChange={(e) =>
+                                    setRuntimeFilter(e.target.value)
+                                }
+                                label="Runtime Filter"
+                            >
+                                <MenuItem value="above">Above</MenuItem>
+                                <MenuItem value="below">Below</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={2}>
+                        <FormControl
+                            fullWidth
+                            variant="outlined"
+                            margin="normal"
+                        >
+                            <InputLabel>Sort By</InputLabel>
+                            <Select
+                                value={sortBy}
+                                onChange={(e) => setSortBy(e.target.value)}
+                                label="Sort By"
+                            >
+                                <MenuItem value="primary_title">
+                                    Primary Title
+                                </MenuItem>
+                                <MenuItem value="runtime_minutes">
+                                    Runtime Minutes
+                                </MenuItem>
+                                <MenuItem value="start_year">Year</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={2}>
+                        <FormControl
+                            fullWidth
+                            variant="outlined"
+                            margin="normal"
+                        >
+                            <InputLabel>Sort Order</InputLabel>
+                            <Select
+                                value={sortOrder}
+                                onChange={(e) => setSortOrder(e.target.value)}
+                                label="Sort Order"
+                            >
+                                <MenuItem value="asc">Ascending</MenuItem>
+                                <MenuItem value="desc">Descending</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={2}>
+                        <FormControl
+                            fullWidth
+                            variant="outlined"
+                            margin="normal"
+                        >
+                            <InputLabel>Genres</InputLabel>
+                            <Select
+                                multiple
+                                value={genres}
+                                onChange={(e) => setGenres(e.target.value)}
+                                label="Genres"
+                                renderValue={(selected) => (
+                                    <div>
+                                        {selected.map((value) => (
+                                            <Chip key={value} label={value} />
+                                        ))}
+                                    </div>
+                                )}
+                            >
+                                <MenuItem value="Documentary">
+                                    Documentary
+                                </MenuItem>
+                                <MenuItem value="Drama">Drama</MenuItem>
+                                <MenuItem value="Action">Action</MenuItem>
+                                {/* Add more MenuItem components for other genres */}
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={2}>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleSearch}
+                        >
+                            Search
+                        </Button>
+                    </Grid>
+                </Grid>
+                <TableContainer>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>Title Type</TableCell>
+                                <TableCell>Primary Title</TableCell>
+                                <TableCell>Original Title</TableCell>
+                                <TableCell>Year</TableCell>
+                                <TableCell>Runtime Minutes</TableCell>
+                                <TableCell>Genres</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {searchResults.map((result, index) => {
+                                return (
+                                    <TableRow key={result.id || index}>
+                                        <TableCell>
+                                            {result.title_type}
+                                        </TableCell>
+                                        <TableCell>
+                                            <Link to={`/titles/${result.id}`}>
+                                                {result.primary_title}
+                                            </Link>
+                                        </TableCell>
+                                        <TableCell>
+                                            {result.original_title}
+                                        </TableCell>
+                                        <TableCell>
+                                            {result.start_year}
+                                        </TableCell>
+                                        <TableCell>
+                                            {result.runtime_minutes}
+                                        </TableCell>
+                                        <TableCell>{result.genres}</TableCell>
+                                        <TableCell>
+                                            <IconButton
+                                                onClick={() =>
+                                                    handleAddToWatchlist(
+                                                        result.id
+                                                    )
+                                                }
+                                            >
+                                                <AddIcon />
+                                            </IconButton>
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            })}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+                {nextPage && (
+                    <Button
+                        variant="outlined"
+                        color="primary"
+                        onClick={handleLoadMore}
+                    >
+                        Load More
+                    </Button>
+                )}
+                <Snackbar
+                    open={open}
+                    autoHideDuration={6000}
+                    onClose={() => setOpen(false)}
+                >
+                    <Alert onClose={() => setOpen(false)} severity="info">
+                        {errorMessage}
+                    </Alert>
+                </Snackbar>
+            </Box>
         </div>
     );
 };
