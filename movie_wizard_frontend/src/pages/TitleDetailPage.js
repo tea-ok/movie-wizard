@@ -140,7 +140,7 @@ const TitleDetailPage = () => {
         try {
             await axios.put(
                 `http://127.0.0.1:8000/api/reviews/update?review_id=${updateId}`,
-                { rating: updateRating, review: updateReview },
+                { rating: updateRating, text: updateReview },
                 config
             );
             handleCloseUpdate();
