@@ -54,8 +54,8 @@ const TitleDetailPage = () => {
 
     const handleClickOpenUpdate = (id, rating, review) => {
         setUpdateId(id);
-        setUpdateRating(rating);
-        setUpdateReview(review);
+        setUpdateRating(rating || "");
+        setUpdateReview(review || "");
         setUpdateOpen(true);
     };
 
@@ -291,7 +291,7 @@ const TitleDetailPage = () => {
             <Dialog open={addOpen} onClose={handleCloseAdd}>
                 <DialogTitle>Add Review</DialogTitle>
                 <DialogContent>
-                    <DialogContentText>
+                    <DialogContentText component="div">
                         <TextField
                             autoFocus
                             margin="dense"
