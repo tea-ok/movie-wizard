@@ -32,6 +32,19 @@ const HomePage = () => {
     const [errorMessage, setErrorMessage] = useState("");
     const [open, setOpen] = useState(false);
 
+    const handleReset = () => {
+        setSearchTerm("");
+        setTitleType("");
+        setYear("");
+        setRuntimeMinutes("");
+        setRuntimeFilter("");
+        setSortBy("primary_title");
+        setSearchResults([]);
+        setNextPage(null);
+        setSortOrder("");
+        setGenres([]);
+    };
+
     const handleSearch = async () => {
         try {
             const apiUrl = "http://127.0.0.1:8000/api/titles/";
@@ -312,6 +325,13 @@ const HomePage = () => {
                             onClick={handleSearch}
                         >
                             Search
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            onClick={handleReset}
+                        >
+                            Reset
                         </Button>
                     </Grid>
                 </Grid>
