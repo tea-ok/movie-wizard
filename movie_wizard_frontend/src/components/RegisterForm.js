@@ -26,7 +26,15 @@ const RegisterForm = ({ onRegister }) => {
                 }
             }
         } catch (err) {
-            setError("An error occurred. Please try again.");
+            if (
+                err.response &&
+                err.response.data &&
+                err.response.data.date_of_birth
+            ) {
+                setError(err.response.data.date_of_birth[0]);
+            } else {
+                setError("An error occurred. Please try again.");
+            }
         }
     };
 
@@ -110,6 +118,7 @@ const RegisterForm = ({ onRegister }) => {
                 >
                     Register
                 </Button>
+                {error && <Typography color="error">{error}</Typography>}
             </Box>
         </Container>
     );
