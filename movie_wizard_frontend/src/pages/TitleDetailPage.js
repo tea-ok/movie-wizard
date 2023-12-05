@@ -77,6 +77,11 @@ const TitleDetailPage = () => {
             headers: { Authorization: token },
         };
 
+        if (text === "") {
+            setErrorMessage("Please enter a review.");
+            return;
+        }
+
         const reviewData = {
             title: titleId,
             rating: rating,
@@ -98,8 +103,20 @@ const TitleDetailPage = () => {
             setReviews(response.data);
         } catch (error) {
             if (error.response && error.response.status === 400) {
-                // Server-side validation error, rating must be between 1 and 5
-                setErrorMessage(error.response.data.rating[0]);
+                if (error.response.data.rating) {
+                    // Server-side validation error, rating must be between 1 and 5
+                    setErrorMessage(error.response.data.rating[0]);
+                } else if (error.response.data.text) {
+                    // Server-side validation error, text field is empty
+                    setErrorMessage(error.response.data.text[0]);
+                }
+            } else if (error.response && error.response.status === 403) {
+                setErrorMessage(
+                    "Naughty, naughty! You can only update your own reviews!"
+                );
+            } else {
+                // Handle other types of errors
+                console.error(error);
             }
         }
     };
@@ -152,8 +169,13 @@ const TitleDetailPage = () => {
             setReviews(response.data);
         } catch (error) {
             if (error.response && error.response.status === 400) {
-                // Server-side validation error, rating must be between 1 and 5
-                setErrorMessage(error.response.data.rating[0]);
+                if (error.response.data.rating) {
+                    // Server-side validation error, rating must be between 1 and 5
+                    setErrorMessage(error.response.data.rating[0]);
+                } else if (error.response.data.text) {
+                    // Server-side validation error, text field is empty
+                    setErrorMessage(error.response.data.text[0]);
+                }
             } else if (error.response && error.response.status === 403) {
                 setErrorMessage(
                     "Naughty, naughty! You can only update your own reviews!"
@@ -371,6 +393,14 @@ const TitleDetailPage = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
+            {errorMessage && (
+                <Snackbar
+                    open={!!errorMessage}
+                    autoHideDuration={6000}
+                    onClose={() => setErrorMessage("")}
+                    message={errorMessage}
+                />
+            )}
         </Item>
     );
 };
