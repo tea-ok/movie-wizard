@@ -20,12 +20,13 @@
     - [Cleaned the data](../data.ipynb) using my Data Science skills.
     - Wrote a [script](../scripts/populate_db.py) to insert the 2 million+ titles into the database.
     - Created a Django project and app, and connected it to the database.
+    - Adding middleware such as CORS and authentication to the project.
 
 2. Created the models for the database schema:
 
     - [accounts/models.py](../movie_wizard/accounts/models.py)
         - Using the built-in Django `User` model for authentication.
-        - Features a `UserProfile` model which adds a new table for storing the user's date of birth, with a one-to-one relationship with the User model.
+        - Created an additional `UserProfile` model which adds a new table for storing the user's date of birth, with a one-to-one relationship with the User model.
     - [titles/models.py](../movie_wizard/titles/models.py)
         - Features a `Title` model which stores the title's `title_type`, `primary_title`, `original_title`, `is_adult`, `start_year`, `end_year`, `runtime_minutes`, `genres` and `average_review`.
         - `average_review` is a calculated field which is updated every time review is saved or deleted.
@@ -67,7 +68,7 @@
 
     These kinds of serializers were an entirely new concept to me, and it took some time for me to wrap my head around them. I like how they allow you to customize the data that is returned in the response, and how you can nest serializers to return related data without messing around with complicated SQL queries.
 
-4. Created the views for the models:
+4. Created the views for the models + associated routes (available in the respective `urls.py` files):
 
     - [accounts/views.py](../movie_wizard/accounts/views.py)
         - Features three API views:
@@ -98,3 +99,11 @@
     Pagination is another interesting concept I had neve explored before. I was worried that dealing with a large dataset would be a problem, as my initial `SELECT * FROM titles_title;` query from when I set up the database took over 10 seconds to complete. However, pagination solved this problem, and now the query takes less than a second to complete. This truly blew my mind, and I'm excited to work with even more data in the future.
 
     The `@authentication_classes` and `@permission_classes` decorators were also new to me, and I love how they allow you to easily protect certain routes. Overall, this section is what made me fall in love with Django. Getting used to it took some time, but now that I've learned how it works, I imagine it will be my go-to framework for future projects.
+
+5. Created the [frontend](../movie_wizard_frontend/) for the project based on my API. I won't go into too much detail on this as it's not the main purpose of this project, but I will say that it helped me in coming up with ideas for the API. Features such as `average_review` for the titles would not have been implemented if I hadn't created the frontend, and I'm glad I did. It was also my first time doing frontend development, so it was pretty interesting.
+
+I often though to myself: "Hmm, you know what would look good here... I'd better make a route so I can fetch that data" or "I feel like this should return a different error message, I'll just change it in the serializer". This was a great way to work, going back-and-forth.
+
+6. Wrote tests for all the routes -- in progress.
+
+7. Deployment -- in progress.
