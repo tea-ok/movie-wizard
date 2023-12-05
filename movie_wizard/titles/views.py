@@ -8,15 +8,6 @@ from .serializers import TitleSerializer
 from rest_framework.pagination import PageNumberPagination
 from datetime import date
 
-# test purposes, not used in production due to performance issues
-@api_view(['GET'])
-@authentication_classes([SessionAuthentication, TokenAuthentication])
-@permission_classes([IsAuthenticated])
-def all_titles(request):
-    titles = Title.objects.all()
-    serializer = TitleSerializer(titles, many=True)
-    return Response(serializer.data)
-
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
@@ -78,6 +69,10 @@ def paginated_titles(request):
     # sorting
     if sort_order == 'desc':
         sort_by = f"-{sort_by}"  # add '-' for descending order
+
+    if sort_by == 'average_review' or sort_by == '-average_review':
+        titles = titles.exclude(average_review__isnull=True)
+
     titles = titles.order_by(sort_by)
 
     result_page = paginator.paginate_queryset(titles, request)

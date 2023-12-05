@@ -25,7 +25,6 @@ def age_check(user_profile, is_adult):
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def create_review(request):
-    print(request.data)
     serializer = ReviewSerializer(data=request.data)
 
     if serializer.is_valid():

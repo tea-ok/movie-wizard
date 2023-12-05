@@ -240,6 +240,9 @@ const HomePage = () => {
                                     Runtime Minutes
                                 </MenuItem>
                                 <MenuItem value="start_year">Year</MenuItem>
+                                <MenuItem value="average_review">
+                                    Average Rating
+                                </MenuItem>
                             </Select>
                         </FormControl>
                     </Grid>
@@ -345,6 +348,7 @@ const HomePage = () => {
                                 <TableCell>Year</TableCell>
                                 <TableCell>Runtime Minutes</TableCell>
                                 <TableCell>Genres</TableCell>
+                                <TableCell>Average Rating</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -369,6 +373,9 @@ const HomePage = () => {
                                             {result.runtime_minutes}
                                         </TableCell>
                                         <TableCell>{result.genres}</TableCell>
+                                        <TableCell>
+                                            {result.average_review}
+                                        </TableCell>
                                         <TableCell>
                                             <IconButton
                                                 onClick={() =>
