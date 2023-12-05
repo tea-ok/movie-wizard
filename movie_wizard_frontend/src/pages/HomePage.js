@@ -270,9 +270,38 @@ const HomePage = () => {
                                 <MenuItem value="Documentary">
                                     Documentary
                                 </MenuItem>
-                                <MenuItem value="Drama">Drama</MenuItem>
                                 <MenuItem value="Action">Action</MenuItem>
-                                {/* Add more MenuItem components for other genres */}
+                                <MenuItem value="Adult">Adult</MenuItem>
+                                <MenuItem value="Adventure">Adventure</MenuItem>
+                                <MenuItem value="Animation">Animation</MenuItem>
+                                <MenuItem value="Biography">Biography</MenuItem>
+                                <MenuItem value="Comedy">Comedy</MenuItem>
+                                <MenuItem value="Crime">Crime</MenuItem>
+                                <MenuItem value="Documentary">
+                                    Documentary
+                                </MenuItem>
+                                <MenuItem value="Drama">Drama</MenuItem>
+                                <MenuItem value="Family">Family</MenuItem>
+                                <MenuItem value="Fantasy">Fantasy</MenuItem>
+                                <MenuItem value="Film-Noir">Film-Noir</MenuItem>
+                                <MenuItem value="Game-Show">Game-Show</MenuItem>
+                                <MenuItem value="History">History</MenuItem>
+                                <MenuItem value="Horror">Horror</MenuItem>
+                                <MenuItem value="Music">Music</MenuItem>
+                                <MenuItem value="Musical">Musical</MenuItem>
+                                <MenuItem value="Mystery">Mystery</MenuItem>
+                                <MenuItem value="News">News</MenuItem>
+                                <MenuItem value="Reality-TV">
+                                    Reality-TV
+                                </MenuItem>
+                                <MenuItem value="Romance">Romance</MenuItem>
+                                <MenuItem value="Sci-Fi">Sci-Fi</MenuItem>
+                                <MenuItem value="Short">Short</MenuItem>
+                                <MenuItem value="Sport">Sport</MenuItem>
+                                <MenuItem value="Talk-Show">Talk-Show</MenuItem>
+                                <MenuItem value="Thriller">Thriller</MenuItem>
+                                <MenuItem value="War">War</MenuItem>
+                                <MenuItem value="Western">Western</MenuItem>
                             </Select>
                         </FormControl>
                     </Grid>
