@@ -11,7 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta(object):
         model = User
-        fields = ['id', 'username', 'email', 'password', 'first_name', 'last_name', 'date_of_birth']
+        fields = ['username', 'date_of_birth', 'first_name', 'last_name', 'email']
 
     def validate_date_of_birth(self, value):
         today = date.today()
