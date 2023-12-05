@@ -188,6 +188,15 @@ const TitleDetailPage = () => {
                     "Error fetching title details or reviews:",
                     error.message
                 );
+                if (
+                    error.response &&
+                    error.response.data &&
+                    error.response.data.error
+                ) {
+                    setErrorMessage(error.response.data.error);
+                } else {
+                    setErrorMessage("An error occurred. Please try again.");
+                }
             }
         };
 
@@ -195,7 +204,19 @@ const TitleDetailPage = () => {
     }, [titleId]);
 
     if (!titleDetails) {
-        return <div>Loading...</div>;
+        return (
+            <div>
+                Loading...
+                {errorMessage && (
+                    <Snackbar
+                        open={!!errorMessage}
+                        autoHideDuration={6000}
+                        onClose={() => setErrorMessage("")}
+                        message={errorMessage}
+                    />
+                )}
+            </div>
+        );
     }
 
     return (
@@ -350,14 +371,6 @@ const TitleDetailPage = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
-            {errorMessage && (
-                <Snackbar
-                    open={!!errorMessage}
-                    autoHideDuration={6000}
-                    onClose={() => setErrorMessage("")}
-                    message={errorMessage}
-                />
-            )}
         </Item>
     );
 };
