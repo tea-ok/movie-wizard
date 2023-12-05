@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import axios from "axios";
 
-const Header = () => {
+const Header = ({ showBackButton }) => {
     const navigate = useNavigate();
 
     const handleWatchlist = () => {
@@ -38,14 +38,16 @@ const Header = () => {
     return (
         <AppBar position="static">
             <Toolbar>
-                <IconButton
-                    edge="start"
-                    color="inherit"
-                    onClick={handleBack}
-                    sx={{ mr: 2 }}
-                >
-                    <ArrowBackIcon />
-                </IconButton>
+                {showBackButton && (
+                    <IconButton
+                        edge="start"
+                        color="inherit"
+                        onClick={handleBack}
+                        sx={{ mr: 2 }}
+                    >
+                        <ArrowBackIcon />
+                    </IconButton>
+                )}
                 <Typography variant="h6" sx={{ flexGrow: 1 }}>
                     Movie Wizard
                 </Typography>

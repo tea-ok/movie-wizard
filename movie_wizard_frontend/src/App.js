@@ -13,9 +13,9 @@ import Header from "./components/Header";
 import Watchlist from "./pages/Watchlist";
 
 // Layout component
-const Layout = ({ children }) => (
+const Layout = ({ children, showBackButton }) => (
     <div>
-        <Header />
+        <Header showBackButton={showBackButton} />
         {children}
     </div>
 );
@@ -26,8 +26,9 @@ const isAuthenticated = () => {
 };
 
 const PrivateRoute = ({ element, path }) => {
+    const showBackButton = path !== "/titles";
     return isAuthenticated() ? (
-        <Layout>{element}</Layout>
+        <Layout showBackButton={showBackButton}>{element}</Layout>
     ) : (
         <Navigate to="/login" replace state={{ from: path }} />
     );
