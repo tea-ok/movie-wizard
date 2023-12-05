@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from .models import UserProfile
 from datetime import date, timedelta
+from django.core.validators import validate_email
 
 class UserSerializer(serializers.ModelSerializer):
     date_of_birth = serializers.DateField(source='userprofile.date_of_birth', required=True)
@@ -16,6 +17,16 @@ class UserSerializer(serializers.ModelSerializer):
         today = date.today()
         if value > today - timedelta(days=13*365.25):
             raise serializers.ValidationError('You must be at least 13 years old to register.')
+        return value
+
+    def validate_email(self, value):
+        try:
+            validate_email(value)
+        except ValidationError:
+            raise serializers.ValidationError('Invalid email address.')
+
+        if User.objects.filter(email=value).exists():
+            raise serializers.ValidationError('Email address already registered.')
         return value
 
     def create(self, validated_data):

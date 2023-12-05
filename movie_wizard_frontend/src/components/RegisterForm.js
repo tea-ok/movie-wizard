@@ -1,5 +1,14 @@
 import React from "react";
-import { Container, Typography, Box, TextField, Button } from "@mui/material";
+import {
+    Container,
+    Typography,
+    Box,
+    TextField,
+    Button,
+    Alert,
+    Link,
+} from "@mui/material";
+import { Link as RouterLink } from "react-router-dom";
 import axios from "axios";
 
 const RegisterForm = ({ onRegister }) => {
@@ -26,14 +35,11 @@ const RegisterForm = ({ onRegister }) => {
                 }
             }
         } catch (err) {
-            if (
-                err.response &&
-                err.response.data &&
-                err.response.data.date_of_birth
-            ) {
-                setError(err.response.data.date_of_birth[0]);
+            if (err.response && err.response.data) {
+                const errors = Object.values(err.response.data).flat();
+                setError(errors);
             } else {
-                setError("An error occurred. Please try again.");
+                setError(["An error occurred. Please try again."]);
             }
         }
     };
@@ -42,6 +48,11 @@ const RegisterForm = ({ onRegister }) => {
         <Container maxWidth="xs">
             <Typography variant="h4" align="center" gutterBottom>
                 Register
+            </Typography>
+            <Typography align="center">
+                <Link component={RouterLink} to="/login">
+                    Back to login
+                </Link>
             </Typography>
             <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
                 <TextField
@@ -118,7 +129,12 @@ const RegisterForm = ({ onRegister }) => {
                 >
                     Register
                 </Button>
-                {error && <Typography color="error">{error}</Typography>}
+                {error &&
+                    error.map((err, index) => (
+                        <Alert key={index} severity="error" sx={{ mt: 2 }}>
+                            {err}
+                        </Alert>
+                    ))}
             </Box>
         </Container>
     );
