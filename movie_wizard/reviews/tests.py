@@ -29,13 +29,14 @@ class CreateReviewTest(APITestCase):
         self.token = Token.objects.create(user=self.user)
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)
         self.title = Title.objects.create(
-            title_type='Movie',
+            title_type='movie',
             primary_title='Test Title',
             original_title='Test Title',
             is_adult=False,
             start_year=2000,
             runtime_minutes=120,
-            genres='Action,Adventure'
+            genres='Action,Adventure',
+            average_review=2.5
         )
         self.create_review_url = '/api/reviews/create'
 
@@ -96,3 +97,62 @@ class CreateReviewTest(APITestCase):
         }
         response = self.client.post(self.create_review_url, data)
         self.assertEqual(response.status_code, 403)
+
+class GetReviewsForTitleTest(APITestCase):
+    def setUp(self):
+        self.client = APIClient()
+        user_data = {
+            'username': 'testuser',
+            'password': 'testpassword123',
+            'email': 'testuser@example.com',
+            'first_name': 'testuser',
+            'last_name': 'testuser',
+            'date_of_birth': '2010-10-1', # 13-year-old user to test age restriction
+        }
+        serializer = UserSerializer(data=user_data)
+        if serializer.is_valid():
+            serializer.save()
+            self.user = User.objects.get(username=user_data['username'])
+            self.user.set_password(user_data['password'])
+            self.user.save()
+        else:
+            raise Exception(serializer.errors)
+
+        self.token = Token.objects.create(user=self.user)
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)
+        self.title = Title.objects.create(
+            title_type='Movie',
+            primary_title='Test Title',
+            original_title='Test Title',
+            is_adult=False,
+            start_year=2000,
+            runtime_minutes=120,
+            genres='Action,Adventure',
+            average_review=2.5
+        )
+        self.get_reviews_url = '/api/reviews/'
+
+    def test_get_reviews_for_title_with_valid_title_id(self):
+        Review.objects.create(user=self.user, title=self.title, rating=5, text='Test Content')
+        response = self.client.get(f"{self.get_reviews_url}?title_id={self.title.id}")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 1)
+
+    def test_get_reviews_for_title_with_invalid_title_id(self):
+        response = self.client.get(f"{self.get_reviews_url}?title_id=9999")
+        self.assertEqual(response.status_code, 404)
+
+    def test_get_reviews_for_title_without_title_id(self):
+        response = self.client.get(self.get_reviews_url)
+        self.assertEqual(response.status_code, 400)
+
+    def test_get_reviews_for_title_without_authentication(self):
+        self.client.logout()
+        response = self.client.get(f"{self.get_reviews_url}?title_id={self.title.id}")
+        self.assertEqual(response.status_code, 403)
+
+    def test_get_reviews_for_title_with_age_restriction(self):
+        self.title.is_adult = True
+        self.title.save()
+        response = self.client.get(f"{self.get_reviews_url}?title_id={self.title.id}")
+        self.assertEqual(response.status_code, 403)  # Assuming age_check returns a 403 status code
