@@ -25,11 +25,14 @@ def age_check(user_profile, is_adult):
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def create_review(request):
+    title_id = request.data.get('title')
+    if not title_id:
+        return Response({'error': 'Title ID is required.'}, status=400)
+    title = get_object_or_404(Title, pk=title_id) # get_object_or_404 handles the case where the title does not exist
+
     serializer = ReviewSerializer(data=request.data)
 
     if serializer.is_valid():
-        title_id = request.data.get('title')
-        title = get_object_or_404(Title, pk=title_id) # get_object_or_404 handles the case where the title does not exist
         user_profile = request.user.userprofile
 
         age_check_result = age_check(user_profile, title.is_adult)
