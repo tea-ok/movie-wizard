@@ -50,8 +50,6 @@ def get_reviews_for_title(request):
     title_id = request.query_params.get('title_id')
     if not title_id:
         return Response({'error': 'Title ID is required.'}, status=status.HTTP_400_BAD_REQUEST)
-    if not title_id.isdigit():
-        return Response({'error': 'Invalid title_id.'}, status=status.HTTP_400_BAD_REQUEST)
 
     title = get_object_or_404(Title, pk=title_id)
     user_profile = request.user.userprofile
@@ -71,8 +69,6 @@ def update_review(request):
     review_id = request.query_params.get('review_id')
     if not review_id:
         return Response({'error': 'Review ID is required.'}, status=400)
-    if not review_id.isdigit():
-        return Response({'error': 'Invalid review_id.'}, status=400)
 
     review = get_object_or_404(Review, pk=review_id)
     if review.user != request.user:
@@ -91,8 +87,6 @@ def delete_review(request):
     review_id = request.query_params.get('review_id')
     if not review_id:
         return Response({'error': 'Review ID is required.'}, status=400)
-    if not review_id.isdigit():
-        return Response({'error': 'Invalid review_id.'}, status=400)
 
     review = get_object_or_404(Review, pk=review_id)
     if review.user != request.user:
