@@ -2,6 +2,7 @@ data.csv
 data_v1.csv
 data.tsv
 data_200k.csv
+data_clean.csv
 test_data.ipynb
 test.rest
 .env
