@@ -7,13 +7,17 @@ from .models import Title
 from .serializers import TitleSerializer
 from rest_framework.pagination import PageNumberPagination
 from datetime import date
+from django.shortcuts import get_object_or_404
 
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def title(request):
     id = request.query_params.get('id')
-    title = Title.objects.get(id=id)
+    if not id:
+        return Response({'error': 'id is required'}, status=400)
+        
+    title = get_object_or_404(Title, id=id)
     serializer = TitleSerializer(title, many=False)
     return Response(serializer.data)
 
