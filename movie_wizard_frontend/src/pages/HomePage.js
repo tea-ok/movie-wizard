@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { FormControl, InputLabel, Select, MenuItem, Chip } from "@mui/material";
+import {
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
+    Chip,
+    CircularProgress,
+} from "@mui/material";
 import { TextField, Button, Grid } from "@mui/material";
 import {
     Table,
@@ -31,6 +38,8 @@ const HomePage = () => {
     const [genres, setGenres] = useState([]);
     const [errorMessage, setErrorMessage] = useState("");
     const [open, setOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isLoadingMore, setIsLoadingMore] = useState(false);
 
     const handleReset = () => {
         setSearchTerm("");
@@ -46,6 +55,7 @@ const HomePage = () => {
     };
 
     const handleSearch = async () => {
+        setIsLoading(true);
         try {
             const apiUrl = "http://127.0.0.1:8000/api/titles/";
             const queryParams = {
@@ -77,9 +87,11 @@ const HomePage = () => {
         } catch (error) {
             console.error("Error fetching search results:", error.message);
         }
+        setIsLoading(false);
     };
 
     const handleLoadMore = async () => {
+        setIsLoadingMore(true);
         try {
             if (!nextPage) {
                 console.log("No more results to load");
@@ -100,6 +112,7 @@ const HomePage = () => {
         } catch (error) {
             console.error("Error fetching more results:", error.message);
         }
+        setIsLoadingMore(false);
     };
 
     const handleAddToWatchlist = async (titleId) => {
@@ -344,69 +357,99 @@ const HomePage = () => {
                         </Button>
                     </Grid>
                 </Grid>
-                <TableContainer>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>Title Type</TableCell>
-                                <TableCell>Primary Title</TableCell>
-                                <TableCell>Original Title</TableCell>
-                                <TableCell>Year</TableCell>
-                                <TableCell>Runtime Minutes</TableCell>
-                                <TableCell>Genres</TableCell>
-                                <TableCell>Average Rating</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {searchResults.map((result, index) => {
-                                return (
-                                    <TableRow key={result.id || index}>
-                                        <TableCell>
-                                            {result.title_type}
-                                        </TableCell>
-                                        <TableCell>
-                                            <Link to={`/titles/${result.id}`}>
-                                                {result.primary_title}
-                                            </Link>
-                                        </TableCell>
-                                        <TableCell>
-                                            {result.original_title}
-                                        </TableCell>
-                                        <TableCell>
-                                            {result.start_year}
-                                        </TableCell>
-                                        <TableCell>
-                                            {result.runtime_minutes}
-                                        </TableCell>
-                                        <TableCell>{result.genres}</TableCell>
-                                        <TableCell>
-                                            {result.average_review}
-                                        </TableCell>
-                                        <TableCell>
-                                            <IconButton
-                                                onClick={() =>
-                                                    handleAddToWatchlist(
-                                                        result.id
-                                                    )
-                                                }
-                                            >
-                                                <AddIcon />
-                                            </IconButton>
-                                        </TableCell>
-                                    </TableRow>
-                                );
-                            })}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-                {nextPage && (
-                    <Button
-                        variant="outlined"
-                        color="primary"
-                        onClick={handleLoadMore}
-                    >
-                        Load More
-                    </Button>
+                {isLoading ? (
+                    <CircularProgress />
+                ) : (
+                    <div>
+                        <TableContainer>
+                            <Table>
+                                {searchResults.length > 0 && (
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell>Title Type</TableCell>
+                                            <TableCell>Primary Title</TableCell>
+                                            <TableCell>
+                                                Original Title
+                                            </TableCell>
+                                            <TableCell>Year</TableCell>
+                                            <TableCell>
+                                                Runtime Minutes
+                                            </TableCell>
+                                            <TableCell>Genres</TableCell>
+                                            <TableCell>
+                                                Average Rating
+                                            </TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                )}
+                                <TableBody>
+                                    {searchResults.map((result, index) => {
+                                        return (
+                                            <TableRow key={result.id || index}>
+                                                <TableCell>
+                                                    {result.title_type}
+                                                </TableCell>
+                                                <TableCell>
+                                                    <Link
+                                                        to={`/titles/${result.id}`}
+                                                    >
+                                                        {result.primary_title}
+                                                    </Link>
+                                                </TableCell>
+                                                <TableCell>
+                                                    {result.original_title}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {result.start_year}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {result.runtime_minutes}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {result.genres}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {result.average_review}
+                                                </TableCell>
+                                                <TableCell>
+                                                    <IconButton
+                                                        onClick={() =>
+                                                            handleAddToWatchlist(
+                                                                result.id
+                                                            )
+                                                        }
+                                                    >
+                                                        <AddIcon />
+                                                    </IconButton>
+                                                </TableCell>
+                                            </TableRow>
+                                        );
+                                    })}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                        <div
+                            style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                            }}
+                        >
+                            {isLoadingMore ? (
+                                <CircularProgress />
+                            ) : (
+                                nextPage && (
+                                    <Button
+                                        variant="outlined"
+                                        color="primary"
+                                        onClick={handleLoadMore}
+                                    >
+                                        Load More
+                                    </Button>
+                                )
+                            )}
+                        </div>
+                    </div>
                 )}
                 <Snackbar
                     open={open}
