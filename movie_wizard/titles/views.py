@@ -16,7 +16,7 @@ def title(request):
     id = request.query_params.get('id')
     if not id:
         return Response({'error': 'id is required'}, status=400)
-        
+
     title = get_object_or_404(Title, id=id)
     serializer = TitleSerializer(title, many=False)
     return Response(serializer.data)
@@ -33,6 +33,7 @@ def paginated_titles(request):
     titles = Title.objects.all()
 
     # age check, prevents users under 18 from seeing adult titles
+    # this is the route used to display search results, that's why it's here
     user_profile = request.user.userprofile
     user_date_of_birth = user_profile.date_of_birth if user_profile else None
 
@@ -58,7 +59,7 @@ def paginated_titles(request):
         for genre in requested_genres:
             titles = titles.filter(genres__icontains=genre)
     if requested_title_type:
-        titles = titles.filter(title_type__icontains=requested_title_type)
+        titles = titles.filter(title_type__iexact=requested_title_type)
     if requested_start_year:
         titles = titles.filter(start_year=requested_start_year)
     if requested_primary_title:
