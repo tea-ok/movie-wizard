@@ -1,6 +1,5 @@
-from django.test import TestCase
+from rest_framework.test import APIClient, APITestCase
 from django.urls import reverse
-from rest_framework.test import APIClient
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
 from .models import UserProfile
@@ -8,7 +7,7 @@ from accounts.serializers import UserSerializer
 from rest_framework import status
 from rest_framework.test import force_authenticate
 
-class RegisterViewTest(TestCase):
+class RegisterViewTest(APITestCase):
     def setUp(self):
         self.client = APIClient()
         self.register_url = '/api/accounts/register'
@@ -94,7 +93,7 @@ class RegisterViewTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(User.objects.count(), 1)
 
-class LoginViewTest(TestCase):
+class LoginViewTest(APITestCase):
     def setUp(self):
         self.client = APIClient()
         self.login_url = '/api/accounts/login'
@@ -142,7 +141,7 @@ class LoginViewTest(TestCase):
         response = self.client.post(self.login_url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-class LogoutViewTest(TestCase):
+class LogoutViewTest(APITestCase):
     def setUp(self):
         self.client = APIClient()
         self.logout_url = '/api/accounts/logout'
