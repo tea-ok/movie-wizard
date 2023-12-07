@@ -179,6 +179,12 @@ const HomePage = () => {
                                 <MenuItem value="tvepisode">
                                     TV Episode
                                 </MenuItem>
+                                <MenuItem value="tvminiseries">
+                                    TV Mini-Series
+                                </MenuItem>
+                                <MenuItem value="tvspecial">
+                                    TV Special
+                                </MenuItem>
                             </Select>
                         </FormControl>
                     </Grid>
