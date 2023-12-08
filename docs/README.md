@@ -2,6 +2,8 @@
 
 ### Taavi Kalaluka - AB0319
 
+### API Documentation: [here](https://documenter.getpostman.com/view/24394414/2s9YkgE5aP)
+
 ## Table of Contents
 
 -   [Technologies](#technologies)

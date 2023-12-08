@@ -64,7 +64,7 @@ First, clone the repo and navigate to the root directory.
     ```
     python manage.py runserver
     ```
-7. Enjoy! Documentation for API endpoints coming soon.
+7. Enjoy! Here's the documentation: [docs](https://documenter.getpostman.com/view/24394414/2s9YkgE5aP)
 
 #### Frontend
 

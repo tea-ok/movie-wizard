@@ -186,7 +186,6 @@ const HomePage = () => {
                                 onChange={(e) => setTitleType(e.target.value)}
                                 label="Title Type"
                             >
-                                <MenuItem value="all">All</MenuItem>
                                 <MenuItem value="movie">Movie</MenuItem>
                                 <MenuItem value="tvseries">TV Series</MenuItem>
                                 <MenuItem value="tvepisode">
@@ -302,9 +301,6 @@ const HomePage = () => {
                                     </div>
                                 )}
                             >
-                                <MenuItem value="Documentary">
-                                    Documentary
-                                </MenuItem>
                                 <MenuItem value="Action">Action</MenuItem>
                                 <MenuItem value="Adult">Adult</MenuItem>
                                 <MenuItem value="Adventure">Adventure</MenuItem>
