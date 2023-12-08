@@ -43,6 +43,7 @@ First, clone the repo and navigate to the root directory.
     pip install -r requirements.txt
     ```
 3. Navigate to the [`/movie_wizard/movie_wizard`](./movie_wizard/movie_wizard/) directory and add an `.env` file with the following variables:
+
     ```
     DATABASE_NAME=db_name
     DATABASE_USER=db_user
@@ -50,16 +51,20 @@ First, clone the repo and navigate to the root directory.
     DATABASE_HOST=db_host
     DATABASE_PORT=db_port
     ```
+
     , assuming you have a Microsoft Azure PostgreSQL server set up with a database. If not, you can modify the [`settings.py`](./movie_wizard/movie_wizard/settings.py) file to use the PostgreSQL database of your choice.
-4. Run the migrations:
+
+4. Populate the `titles_title` table with some data. You can write your own script to insert some mock data, or download the IMDB dataset [here](https://datasets.imdbws.com/title.basics.tsv.gz) and perform data cleaning similar to what I did in [data.ipynb](./data.ipynb). Then, you can run a script like the one I created [populate_db.py] to populate the database. This can take a few minutes, as there are over 2 million titles in the dataset after cleaning.
+
+5. Run the migrations:
     ```
     python manage.py migrate
     ```
-5. Start the server:
+6. Start the server:
     ```
     python manage.py runserver
     ```
-6. Enjoy! Documentation for API endpoints coming soon.
+7. Enjoy! Documentation for API endpoints coming soon.
 
 #### Frontend
 

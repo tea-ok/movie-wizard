@@ -6,14 +6,14 @@ from django.db.models import Avg
 from django.apps import apps
 
 class Title(models.Model):
-    title_type = models.CharField(max_length=50)
-    primary_title = models.CharField(max_length=512)
+    title_type = models.CharField(max_length=50, db_index=True)
+    primary_title = models.CharField(max_length=512, db_index=True)
     original_title = models.CharField(max_length=512)
-    is_adult = models.BooleanField(default=False)
-    start_year = models.IntegerField(null=True, blank=True)
-    runtime_minutes = models.IntegerField(null=True, blank=True)
-    genres = models.CharField(max_length=255, null=True, blank=True)
-    average_review = models.FloatField(null=True, blank=True)
+    is_adult = models.BooleanField(default=False, db_index=True)
+    start_year = models.IntegerField(null=True, blank=True, db_index=True)
+    runtime_minutes = models.IntegerField(null=True, blank=True, db_index=True)
+    genres = models.CharField(max_length=255, null=True, blank=True, db_index=True)
+    average_review = models.FloatField(null=True, blank=True, db_index=True)
 
     def __str__(self):
         return self.primary_title
