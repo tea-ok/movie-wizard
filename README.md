@@ -6,8 +6,6 @@
 ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
 ![Azure](https://img.shields.io/badge/azure-%230072C6.svg?style=for-the-badge&logo=microsoftazure&logoColor=white)
 
-#### **Still in development. Finishing touches and deployment will be done over the next few days :eyes: **
-
 ### Overview
 
 Movie Wizard is a full-stack application which enables users to search through a large (2 million+) database of titles, and add them to their own personal watchlist. Users can also rate titles, as well as leave reviews for other users to see.
@@ -54,7 +52,7 @@ First, clone the repo and navigate to the root directory.
 
     , assuming you have a Microsoft Azure PostgreSQL server set up with a database. If not, you can modify the [`settings.py`](./movie_wizard/movie_wizard/settings.py) file to use the PostgreSQL database of your choice.
 
-4. Populate the `titles_title` table with some data. You can write your own script to insert some mock data, or download the IMDB dataset [here](https://datasets.imdbws.com/title.basics.tsv.gz) and perform data cleaning similar to what I did in [data.ipynb](./data.ipynb). Then, you can run a script like the one I created [populate_db.py] to populate the database. This can take a few minutes, as there are over 2 million titles in the dataset after cleaning.
+4. Populate the `titles_title` table with some data. You can write your own script to insert some mock data, or download the IMDB dataset [here](https://datasets.imdbws.com/title.basics.tsv.gz) and perform data cleaning similar to what I did in [data.ipynb](./data/data.ipynb). Then, you can run a script like the one I created [populate_db.py](./scripts/populate_db.py) to populate the database. This can take a few minutes, as there are over 2 million titles in the dataset after cleaning.
 
 5. Run the migrations:
     ```

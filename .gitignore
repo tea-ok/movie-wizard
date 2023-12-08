@@ -1,9 +1,5 @@
-data.csv
-data_v1.csv
-data.tsv
 .production
-test_data.ipynb
-test.rest
+data.csv
 .env
 .DS_Store# Byte-compiled / optimized / DLL files
 __pycache__/

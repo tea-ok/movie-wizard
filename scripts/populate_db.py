@@ -14,7 +14,7 @@ django.setup()
 
 from titles.models import Title
 
-csv_file_path = '../data.csv'
+csv_file_path = '../data/data.csv'
 
 with open(csv_file_path, 'r') as file:
     reader = csv.reader(file)

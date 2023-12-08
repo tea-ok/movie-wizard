@@ -1,20 +1,26 @@
 # Documenting my learning journey - API Development with Django
 
-### Taavi Kalaluka - AB0319
+### Taavi Kalaluka - AB0319 - TTC8430-3003
 
 ### API Documentation: [here](https://documenter.getpostman.com/view/24394414/2s9YkgE5aP)
+
+### Video Demo: [here](https://www.youtube.com/watch?v=aCL7O36um_w)
 
 ## Table of Contents
 
 -   [Technologies](#technologies)
+-   [Final Backend Structure](#final-backend-structure)
+    -   [ERD](#erd)
 -   [Workflow](#workflow)
     -   [Initial setup](#initial-setup)
     -   [Created the models for the database schema](#created-the-models-for-the-database-schema)
     -   [Created the serializers for the models](#created-the-serializers-for-the-models)
-    -   [Created the views for the models + associated routes](#created-the-views-for-the-models--associated-routes)
+    -   [Created the views for the models + associated routes](#created-the-views-for-the-models--associated-routes-available-in-the-respective-urlspy-files)
     -   [Created the frontend](#created-the-frontend)
     -   [Wrote tests for all the routes](#wrote-tests-for-all-the-routes)
-    -   [Deployment](#deployment)
+-   [Conclusion](#conclusion)
+    -   [Time spent](#time-spent)
+    -   [Self-assessment](#self-assessment)
 
 ### Technologies
 
@@ -23,13 +29,70 @@
 -   [PostgreSQL](https://www.postgresql.org/)
 -   [Azure](https://azure.microsoft.com/en-us/)
 
+### Final Backend Structure
+
+Here's the structure of the final project. `admin.py` files were left empty, as I didn't need to use the admin panel. Apart from that, all files have something:
+
+```
+movie_wizard
+|-- accounts
+| |-- admin.py
+| |-- apps.py
+| |-- models.py
+| |-- serializers.py
+| |-- tests.py
+| |-- urls.py
+| |-- views.py
+|
+|-- movie_wizard
+| |-- settings.py
+| |-- urls.py
+| |-- asgi.py
+| |-- deployment.py
+| |-- .env
+| |-- wsgi.py
+|
+|-- reviews
+| |-- admin.py
+| |-- apps.py
+| |-- models.py
+| |-- serializers.py
+| |-- tests.py
+| |-- urls.py
+| |-- views.py
+|
+|-- titles
+| |-- admin.py
+| |-- apps.py
+| |-- models.py
+| |-- serializers.py
+| |-- tests.py
+| |-- urls.py
+| |-- views.py
+|
+|-- watchlist
+|-- admin.py
+|-- apps.py
+|-- models.py
+|-- serializers.py
+|-- tests.py
+|-- urls.py
+|-- views.py
+```
+
+#### ERD
+
+Generated with PgAdmin4:
+
+![ERD](./images/ERD.jpeg)
+
 ### Workflow
 
 #### Initial setup:
 
 -   Created an Azure PostgreSQL server and database for the project.
 -   Downloaded the IMDB movie data from the [IMDB Developer Website](https://developer.imdb.com/non-commercial-datasets/).
--   [Cleaned the data](../data.ipynb) using my Data Science skills.
+-   [Cleaned the data](../data/data.ipynb) using my Data Science skills.
 -   Wrote a [script](../scripts/populate_db.py) to insert the 2 million+ titles into the database.
 -   Created a Django project and app, and connected it to the database.
 -   Adding middleware such as CORS and authentication to the project.
@@ -129,7 +192,7 @@
 
     Thinking about all the ways the user could filter and sort the titles was also a fun challenge. I'm sure there are more efficient ways to do it, but I'm happy with the way it turned out. Testing this route took a lot of time :D
 
-    Pagination is another interesting concept I had neve explored before. I was worried that dealing with a large dataset would be a problem, as my initial `SELECT * FROM titles_title;` query from when I set up the database took over 10 seconds to complete. However, pagination solved this problem, and now the query takes less than a second to complete. This truly blew my mind, and I'm excited to work with even more data in the future.
+    Pagination is another interesting concept I had neve explored before. I was worried that dealing with a large dataset would be a problem, as my initial `SELECT * FROM titles_title;` query from when I set up the database took over 16 seconds to complete. However, pagination partially solved this problem, and now most queries made through the backend take 2-5 seconds to complete. This truly blew my mind, and I can't wait to work with even more data in the future!
 
     The `@authentication_classes` and `@permission_classes` decorators were also new to me, and I love how they allow you to easily protect certain routes. Overall, this section is what made me fall in love with Django. Getting used to it took some time, but now that I've learned how it works, I imagine it will be my go-to framework for future projects.
 
@@ -156,6 +219,14 @@ Here's a screenshot of the tests passing :sunglasses:
 
 ![tests](./images/tests.png)
 
-#### Deployment -- in progress.
+### Conclusion
 
-The plan is to use Azure's Appservice, or maybe a VM. Either way, I'll only keep it up for a couple of hours, as I don't want to pay for it. I'll update this section after my tests, with a video, screenshots etc.
+#### Time spent
+
+Right now, looking at my commit history, I've made 85 commits to this project over 11 days. Some days I worked more hours than others, but I'd say that I've spent around 50 hours on this project. I'm very happy with the result, and I'm excited to continue working on it in the future to make it even better. I had a great experience with Django, and I look forward to using it in future projects.
+
+#### Self-assessment
+
+Based on the amount of effort and features available, I believe that I deserve full points for this project and an overall grade 5 for the course. I implemented many advanced features such as the auto-updating `average_review` field for titles, pagination, filtering, sorting, and more. I also wrote tests for all the routes, and I believe that my code is well-documented and easy to read.
+
+I also spent a lot of time on the frontend, which is not required for this project, but I believe it shows my dedication to the project and my willingness to learn new things. Same thing with the data cleaning and population scripts, which were not required but I did them anyway. Additionally, I spent a lot of time on the documentation, which I think is very thorough and easy to understand.
