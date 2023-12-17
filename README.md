@@ -6,6 +6,10 @@
 ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
 ![Azure](https://img.shields.io/badge/azure-%230072C6.svg?style=for-the-badge&logo=microsoftazure&logoColor=white)
 
+#### API Documentation: [here](https://documenter.getpostman.com/view/24394414/2s9YkgE5aP)
+
+#### Learning Diary (Steps taken with the API and what I learned): [here](./docs/)
+
 ### Overview
 
 Movie Wizard is a full-stack application which enables users to search through a large (2 million+) database of titles, and add them to their own personal watchlist. Users can also rate titles, as well as leave reviews for other users to see.

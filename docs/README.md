@@ -1,7 +1,5 @@
 # Documenting my learning journey - API Development with Django
 
-### Taavi Kalaluka - AB0319 - TTC8430-3003
-
 ### API Documentation: [here](https://documenter.getpostman.com/view/24394414/2s9YkgE5aP)
 
 ### Video Demo: [here](https://www.youtube.com/watch?v=aCL7O36um_w)
