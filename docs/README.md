@@ -17,8 +17,6 @@
     -   [Created the frontend](#created-the-frontend)
     -   [Wrote tests for all the routes](#wrote-tests-for-all-the-routes)
 -   [Conclusion](#conclusion)
-    -   [Time spent](#time-spent)
-    -   [Self-assessment](#self-assessment)
 
 ### Technologies
 
@@ -219,14 +217,6 @@ Here's a screenshot of the tests passing :sunglasses:
 
 ### Conclusion
 
-#### Time spent
+Right now, looking at my commit history, I've made 85 commits to this project over 11 days. Some days I worked more hours than others, but I'd say that I've spent around 50 hours on this project. I'm very happy with the result, and I'm excited to continue working on it in the future to make it even better. I had a great experience learning Django, and I look forward to using it in future projects.
 
-Right now, looking at my commit history, I've made 85 commits to this project over 11 days. Some days I worked more hours than others, but I'd say that I've spent around 50 hours on this project. I'm very happy with the result, and I'm excited to continue working on it in the future to make it even better. I had a great experience with Django, and I look forward to using it in future projects.
-
-#### Self-assessment
-
-Based on the amount of effort and features available, I believe that I deserve full points for this project and an overall grade 5 for the course. I implemented many advanced features such as the auto-updating `average_review` field for titles, pagination, filtering, sorting, and more. I also wrote tests for all the routes, and I believe that my code is well-documented and easy to read.
-
-Furthermore, I spent a lot of time on the frontend, which is not required for this project, but I believe it shows my dedication to the project and my willingness to learn new things. Same thing with the data cleaning and population scripts, which were not required but I did them anyway. Additionally, I spent a lot of time on the documentation, which I think is very thorough and easy to understand.
-
-The functionality of the application could be improved further by using Redis to cache the results of the most popular queries to make those popular queries faster, and by including features such as the ability for user's to upload profile pictures, and use OAuth authentication for registering. I unfortunately didn't have time to implement these features, but I might add them over Christmas break.
+The functionality of the application could be improved further by using Redis to cache the results of the most popular queries to make those popular queries faster, and by including features such as the ability for user's to upload profile pictures, and use OAuth authentication for registering. I unfortunately haven't had time to implement these features yet, but I hope I will in the future.
