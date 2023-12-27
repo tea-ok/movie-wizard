@@ -8,6 +8,8 @@
 
 #### API Documentation: [here](https://documenter.getpostman.com/view/24394414/2s9YkgE5aP)
 
+#### Video Demo: [here](https://www.youtube.com/watch?v=aCL7O36um_w)
+
 #### Learning Diary (Steps taken with the API and what I learned): [here](./docs/)
 
 ### Overview
